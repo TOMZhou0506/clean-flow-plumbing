@@ -1,0 +1,355 @@
+/* Assign a plumber and vehicle: three numbered steps, with plumbers and
+   vehicles as cards that show whether they are free for the chosen visit. */
+
+.assign-form {
+    margin-top: 22px;
+}
+
+.assign-step {
+    margin: 0 0 22px;
+    padding: 0 0 22px;
+    border-bottom: 1px solid var(--dash-line);
+}
+
+.assign-step__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    color: var(--dash-ink);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.assign-step__number {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--dash-blue);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ---------- step 1: when ---------- */
+
+.assign-when {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 16px 24px;
+    align-items: start;
+}
+
+.assign-field label,
+.assign-field legend {
+    display: block;
+    margin: 0 0 6px;
+    padding: 0;
+    color: var(--dash-ink);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.assign-field input[type='datetime-local'] {
+    width: 100%;
+    margin: 0;
+}
+
+.assign-duration {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.assign-preferred {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    margin: 8px 0 0;
+    color: var(--dash-muted);
+    font-size: 13px;
+}
+
+.assign-preferred__use {
+    /* milligram gives every button a bottom margin, which lifted this one
+       above the text it sits beside. */
+    margin: 0;
+    min-height: 0;
+    line-height: 1.4;
+    padding: 4px 12px;
+    border: 1px solid var(--dash-blue);
+    border-radius: 999px;
+    background: var(--dash-blue-pale);
+    color: var(--dash-blue);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.assign-preferred__use:hover,
+.assign-preferred__use:focus-visible {
+    background: var(--dash-blue);
+    color: #ffffff;
+}
+
+.assign-duration label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.assign-duration__value {
+    color: var(--dash-blue);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.assign-duration input[type='range'] {
+    width: 100%;
+    height: 6px;
+    margin: 14px 0 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: #dbe4ee;
+    accent-color: var(--dash-blue);
+    cursor: pointer;
+}
+
+.assign-duration__scale {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2px;
+    color: var(--dash-muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* The radio stays in the page for keyboards and screen readers; the card is
+   what is seen. */
+.assign-card input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+}
+
+.assign-hint {
+    margin: 12px 0 0;
+    color: var(--dash-muted);
+    font-size: 13px;
+}
+
+/* ---------- live availability line ---------- */
+
+.assign-status {
+    margin: 0 0 22px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: var(--dash-muted);
+    font-size: 14px;
+}
+
+.assign-status.is-loading {
+    background: var(--dash-blue-pale);
+    color: var(--dash-blue);
+}
+
+.assign-status.is-ready {
+    background: #e6f4ea;
+    color: #1e4620;
+}
+
+.assign-status.is-error {
+    background: #fce8e6;
+    color: #8a1c1c;
+}
+
+/* ---------- steps 2 and 3: plumber and vehicle cards ---------- */
+
+.assign-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 10px;
+}
+
+.assign-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid #cbd5df;
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.assign-card:hover {
+    border-color: var(--dash-blue-mid);
+    box-shadow: 0 4px 12px rgba(15, 34, 51, 0.08);
+    transform: translateY(-1px);
+}
+
+.assign-card:has(input:checked) {
+    border-color: var(--dash-blue);
+    background: var(--dash-blue-pale);
+    box-shadow: 0 0 0 2px var(--dash-blue);
+}
+
+.assign-card:has(input:focus-visible) {
+    outline: 3px solid var(--dash-yellow);
+    outline-offset: 2px;
+}
+
+.assign-card.is-taken {
+    background: #f8fafc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+}
+
+.assign-card.is-taken:hover {
+    border-color: #cbd5df;
+}
+
+.assign-card__icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--dash-blue);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.assign-card__icon--vehicle {
+    border-radius: 10px;
+}
+
+.assign-card__icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+}
+
+/* A tick replaces the icon's corner once the card is chosen. */
+.assign-card:has(input:checked) .assign-card__icon::after {
+    content: '✓';
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    background: #15803d;
+    color: #ffffff;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.assign-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.assign-card__name {
+    overflow: hidden;
+    color: var(--dash-ink);
+    font-size: 15px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.assign-card__status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 8px;
+    margin-top: 2px;
+}
+
+.assign-card__detail {
+    color: var(--dash-muted);
+    font-size: 12px;
+}
+
+.assign-card__badge:empty {
+    display: none;
+}
+
+.assign-card__badge {
+    flex: none;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: #fce8e6;
+    color: #8a1c1c;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.assign-card.is-free .assign-card__badge {
+    background: #e6f4ea;
+    color: #1e4620;
+}
+
+/* ---------- summary and submit ---------- */
+
+.assign-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: var(--dash-blue-pale);
+}
+
+.assign-summary__text {
+    margin: 0;
+    color: var(--dash-muted);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.assign-summary__text.is-ready {
+    color: var(--dash-ink);
+}
+
+.assign-summary .dash__btn {
+    margin: 0;
+}
+
+@media (max-width: 760px) {
+    .assign-when {
+        grid-template-columns: 1fr;
+    }
+
+    .assign-summary .dash__btn {
+        width: 100%;
+    }
+}

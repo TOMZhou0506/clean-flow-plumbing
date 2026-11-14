@@ -1,0 +1,82 @@
+.customer-menu {
+    position: relative;
+}
+
+.customer-menu summary {
+    color: inherit;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    padding: .8rem 1rem;
+    white-space: nowrap;
+}
+
+.customer-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+/* An SVG chevron instead of a text glyph (was "\25BE"/"\25B4"). A Unicode
+   triangle character sits at whatever vertical position the current font
+   happens to draw it at - that varies by font and by browser, and was
+   contributing to "Customer" reading as misaligned from the plain text nav
+   items next to it. An SVG has an explicit, fixed box and no such
+   variance. */
+.customer-menu__caret {
+    width: 1rem;
+    height: 1rem;
+    margin-left: .5rem;
+    vertical-align: middle;
+    color: currentColor;
+    transition: transform .2s ease;
+}
+
+.customer-menu[open] .customer-menu__caret {
+    transform: rotate(180deg);
+}
+
+.customer-menu__items {
+    background: #fff;
+    border: 1px solid #e3e9ef;
+    border-radius: 1.2rem;
+    box-shadow: 0 1.2rem 3.2rem -0.8rem rgba(15, 34, 51, .22);
+    min-width: 22rem;
+    padding: .8rem 0;
+    position: absolute;
+    right: 0;
+    top: calc(100% + .4rem);
+    z-index: 100;
+}
+
+.customer-menu__items a {
+    color: #12466f;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 .6rem;
+    padding: 1rem 1.2rem;
+    border-radius: .8rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.customer-menu__items a:hover,
+.customer-menu__items a:focus {
+    background: #eaf2f8;
+    color: #12466f;
+}
+
+.customer-menu__items .customer-menu__logout {
+    color: #b42318;
+    margin-top: .5rem;
+}
+
+.customer-menu__items form {
+    margin: 0;
+}
+
+@media (max-width: 760px) {
+    .customer-menu__items {
+        left: 0;
+        right: auto;
+    }
+}

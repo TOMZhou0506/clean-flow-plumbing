@@ -1,0 +1,686 @@
+/* Milligram overrides */
+:root {
+    /*
+     * Logo height, and the bar height that follows from it.
+     *
+     * 80px on a phone, 95px on a monitor, sliding between the two rather than
+     * snapping at a breakpoint. Remember the root is 62.5%, so 1rem is 10px
+     * here: 8rem and 9.5rem are those two numbers.
+     *
+     * The middle term is the ramp. 1.4vw is the slope and 7.5rem the offset,
+     * which puts it at 80px around a 375px handset and 95px around a 1440px
+     * monitor, with the clamp holding it steady outside that range. Tablets
+     * land in between instead of picking one of the two extremes.
+     *
+     * These two live together because they have to agree. The hero on the
+     * landing page sizes itself as "the viewport minus the nav", and that
+     * subtraction used to be a hardcoded 8rem written when the logo was a
+     * fixed 5.5rem. Changing one without the other pushed the hero past the
+     * bottom of the screen and put a scrollbar on a page designed not to have
+     * one. The bar height is derived now: logo, plus the 1rem padding top and
+     * bottom, plus the 1px border.
+     */
+    --brand-logo-height: clamp(7.4rem, 6.8rem + 0.7vw, 8.8rem);
+    --top-nav-height: calc(var(--brand-logo-height) + 2rem + 1px);
+
+    /* Design tokens shared by every page. The dashboard stylesheet defines its
+       own --dash-* colours; these cover the public/portal pages and keep the
+       two sets visually identical. */
+    --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --color-ink: #0f2233;
+    --color-muted: #5b6b7a;
+    --color-line: #e3e9ef;
+    --radius-sm: 0.8rem;
+    --radius-md: 1.2rem;
+    --radius-lg: 1.6rem;
+    --shadow-sm: 0 1px 2px rgba(15, 34, 51, 0.06), 0 1px 3px rgba(15, 34, 51, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(15, 34, 51, 0.07), 0 10px 24px -6px rgba(15, 34, 51, 0.12);
+
+    /* The following are official CakePHP colors */
+    --color-cakephp-red: #d33c43;
+    --color-cakephp-gray: #404041;
+    --color-cakephp-blue: #2f85ae;
+    --color-cakephp-lightblue: #34bdd7;
+
+    /* These are additional colors */
+    --color-lightgray: #606c76;
+    --color-white: #fff;
+
+    --color-main-bg: #f4f7fa;
+    --color-links: #1b5e96;
+    --color-links-active: #12466f;
+    --color-headings: #0f2233;
+
+    --color-message-success-bg: #e3fcec;
+    --color-message-success-text: #1f9d55;
+    --color-message-success-border: #51d88a;
+
+    --color-message-warning-bg: #fffabc;
+    --color-message-warning-text: #8d7b00;
+    --color-message-warning-border: #d3b800;
+
+    --color-message-error-bg: #fcebea;
+    --color-message-error-text: #cc1f1a;
+    --color-message-error-border: #ef5753;
+
+    --color-message-info-bg: #eff8ff;
+    --color-message-info-text: #2779bd;
+    --color-message-info-border: #6cb2eb;
+
+    /* Clean Flow brand colors, used site-wide for buttons */
+    --color-brand-navy: #12466f;
+    --color-brand-navy-mid: #1b5e96;
+    --color-brand-navy-pale: #eaf2f8;
+    --color-brand-yellow: #f2c230;
+}
+
+/* Buttons: taller, rounder, sentence-case. Milligram ships tiny uppercase
+   buttons with wide letter-spacing, which was a big part of why the site read
+   as a default scaffold. */
+.button, button, input[type='button'], input[type='reset'], input[type='submit'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: auto;
+    min-height: 4.4rem;
+    padding: 0.8rem 2rem;
+    background-color: var(--color-brand-navy);
+    border: 1px solid var(--color-brand-navy);
+    border-radius: var(--radius-sm);
+    color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.2;
+    text-transform: none;
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        box-shadow 0.15s ease, transform 0.15s ease;
+}
+.button:hover, button:hover, input[type='button']:hover, input[type='reset']:hover, input[type='submit']:hover,
+.button:focus, button:focus, input[type='button']:focus, input[type='reset']:focus, input[type='submit']:focus {
+    background-color: var(--color-brand-navy-mid);
+    border-color: var(--color-brand-navy-mid);
+    color: var(--color-white);
+    box-shadow: var(--shadow-md);
+}
+.button:focus-visible, button:focus-visible, input[type='button']:focus-visible, input[type='reset']:focus-visible, input[type='submit']:focus-visible {
+    outline: 3px solid var(--color-brand-yellow);
+    outline-offset: 2px;
+}
+.button.button-outline {
+    background-color: var(--color-white);
+    color: var(--color-brand-navy);
+    border-color: var(--color-line);
+    box-shadow: none;
+}
+.button.button-outline:hover,
+.button.button-outline:focus {
+    background-color: var(--color-brand-navy-pale);
+    color: var(--color-brand-navy);
+    border-color: var(--color-brand-navy);
+    box-shadow: none;
+}
+
+/* The nav is sticky, so an in-page jump like #services used to land with the
+   heading tucked underneath it. That was already true and a taller logo makes
+   it worse, so stop the scroll one bar height short of the target. */
+html {
+    scroll-padding-top: var(--top-nav-height);
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--color-ink);
+    background: var(--color-main-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.top-nav-links,
+.side-nav,
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+}
+
+/* Heavier, tighter headings. The old thin 400-weight Raleway looked faint
+   against the dashboard's dense tables and made hierarchy hard to read. */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-headings);
+}
+h1 { font-size: 3.6rem; }
+h2 { font-size: 2.8rem; }
+h3 { font-size: 2.2rem; }
+h4 { font-size: 1.8rem; }
+
+a {
+    color: var(--color-links);
+    transition: color 0.2s linear;
+}
+
+a:hover,
+a:focus,
+a:active {
+    color: var(--color-links-active);
+    transition: color 0.2s ease-out;
+}
+
+.side-nav a,
+.top-nav-links a,
+th a,
+.actions a {
+    color: var(--color-lightgray);
+}
+
+.side-nav a:hover,
+.side-nav a:focus,
+.actions a:hover,
+.actions a:focus {
+    color: var(--color-links-active);
+}
+
+/* Utility */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Main */
+.content {
+    padding: 3rem;
+    background: var(--color-white);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+.content form {
+    margin: 0;
+}
+.actions a {
+    font-weight: bold;
+    padding: 0 0.4rem;
+}
+.actions a:first-child {
+    padding-left: 0;
+}
+th {
+    white-space: nowrap;
+}
+
+/* Nav bar */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 3.2rem;
+    margin: 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.94);
+    border-bottom: 1px solid var(--color-line);
+    box-shadow: none;
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+}
+.top-nav-title {
+    flex-shrink: 0;
+    text-align: left;
+}
+.top-nav-title a {
+    font-size: 2.4rem;
+    color: var(--color-cakephp-red);
+}
+.top-nav-title span {
+    color: var(--color-cakephp-gray);
+}
+/* The logo was a flat 5.5rem, which read as small on anything above a laptop
+   because the bar around it grows with the viewport and the mark did not.
+
+   The sizing is on --brand-logo-height at the top of this file, next to the
+   nav height that depends on it. */
+.top-nav-title .brand-logo {
+    display: block;
+    height: var(--brand-logo-height);
+    width: auto;
+}
+.top-nav-links {
+    display: flex;
+    align-items: center;
+}
+.top-nav-links a {
+    margin: 0 0 0 1.6rem;
+}
+.top-nav-links a.button {
+    color: var(--color-white);
+    margin-left: 2rem;
+}
+.top-nav-title a {
+    font-weight: bold;
+}
+
+/* Every plain nav item - including the "Customer" menu trigger, which is a
+   <summary> element rather than an <a> and so never matched the shared
+   a{color:...} rule - gets the same colour, weight and hover treatment.
+   Without this the summary fell back to the browser's default black text
+   while the real links used the blue link colour, so "Customer" looked like
+   it belonged to a different menu. */
+.top-nav-links a:not(.button),
+.top-nav-links .customer-menu summary {
+    position: relative;
+    color: var(--color-lightgray);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+.top-nav-links a:not(.button):hover,
+.top-nav-links a:not(.button):focus,
+.top-nav-links .customer-menu summary:hover,
+.top-nav-links .customer-menu[open] summary {
+    color: var(--color-brand-navy);
+}
+
+/* An animated underline on hover for the plain links - the button and the
+   dropdown trigger opt out, since a sliding underline under a CTA or a
+   toggle control reads as broken rather than polished. */
+.top-nav-links a:not(.button)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: -0.4rem;
+    height: 0.2rem;
+    background: var(--color-brand-navy);
+    border-radius: 0.2rem;
+    transition: right 0.25s ease;
+}
+.top-nav-links a:not(.button):hover::after,
+.top-nav-links a:not(.button):focus::after {
+    right: 0;
+}
+
+/* Everything above tried to make <summary> match the <a> tags by copying
+   flexbox tricks onto it (display:flex, align-items:center, a manually
+   centered inner span). None of it held up - <summary>/<details> carry
+   enough browser-specific internal box behaviour that fighting it with more
+   flex layers kept producing a slightly-off result somewhere.
+
+   This instead removes every element-specific centering rule from summary
+   and its wrapper, so there is exactly ONE thing centering every item in
+   this row: .top-nav-links's own align-items:center, acting on plain
+   inline-level boxes with the page's ordinary line-height - the same as
+   every <a> tag next to it. No competing centering logic left to disagree. */
+.top-nav-links .customer-menu,
+.top-nav-links .customer-menu summary,
+.top-nav-links .customer-menu__label {
+    display: inline;
+}
+.top-nav-links .customer-menu summary {
+    padding: 0.8rem 1rem;
+    border-radius: 0.6rem;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+/* Measured as aligned to sub-pixel precision in both testing browsers used
+   while building this, but it still reads as sitting a little high in
+   practice - so a direct, deliberate nudge rather than more box-model
+   archaeology. Adjust this value first if it still looks off. */
+.top-nav-links .customer-menu__label {
+    position: relative;
+    top: 0.5px;
+}
+/* The signed-in customer's first name is typed by them and can be up to 50 characters with no
+   spaces. Past a sensible width it is cut with an ellipsis instead of widening the header. */
+.top-nav-links .customer-menu__label {
+    display: inline-block;
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+.top-nav-links .customer-menu {
+    max-width: 100%;
+}
+.top-nav-links .customer-menu summary:hover {
+    background: var(--color-brand-navy-pale);
+}
+
+.top-nav-links a.button {
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.top-nav-links a.button:hover,
+.top-nav-links a.button:focus {
+    transform: translateY(-0.2rem);
+    box-shadow: 0 0.8rem 1.8rem rgba(18, 70, 111, 0.28);
+}
+.side-nav-item {
+    display: block;
+    padding: 0.5rem 0;
+}
+
+/* ---------- navy navigation bar ----------
+   The bar used to be white, which cut the dark landing hero off with a hard
+   edge and read as bolted on. It is navy now so it flows into the hero. */
+.top-nav {
+    background: #0b2e4a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 6px 18px -8px rgba(5, 20, 33, 0.5);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+/* The logo has a transparent background, so on the navy bar it is drawn as a
+   plain white mark rather than sitting on a tile. */
+.top-nav-title .brand-logo {
+    filter: brightness(0) invert(1);
+}
+.top-nav-links a:not(.button),
+.top-nav-links .customer-menu summary {
+    color: rgba(255, 255, 255, 0.86);
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: inherit;
+}
+.top-nav-links a:not(.button):hover,
+.top-nav-links a:not(.button):focus,
+.top-nav-links .customer-menu summary:hover,
+.top-nav-links .customer-menu[open] summary {
+    color: #ffffff;
+}
+.top-nav-links a:not(.button)::after {
+    background: var(--color-brand-yellow);
+}
+.top-nav-links .customer-menu summary:hover,
+.top-nav-links .customer-menu[open] summary {
+    background: rgba(255, 255, 255, 0.12);
+}
+/* The one call to action in the bar. */
+.top-nav-links a.button {
+    background: var(--color-brand-yellow);
+    border-color: var(--color-brand-yellow);
+    color: #102b3d;
+    font-weight: 700;
+}
+.top-nav-links a.button:hover,
+.top-nav-links a.button:focus {
+    background: #ffd45a;
+    border-color: #ffd45a;
+    color: #102b3d;
+    box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.3);
+}
+/* The account menu's trigger is a <summary>, which kept its own box model and
+   sat a few pixels lower than the plain links beside it. Matching the line
+   height and zeroing its margins lines it up with them. */
+.top-nav-links .customer-menu {
+    display: inline-flex;
+    align-items: center;
+}
+.top-nav-links .customer-menu summary {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+}
+.top-nav-links .customer-menu__label {
+    top: 0;
+}
+/* The dropdown panel is white, so its links keep the dark navy colour and do
+   not pick up the white link colour used on the bar itself. */
+.top-nav-links .customer-menu__items a:not(.button) {
+    color: #12466f;
+    font-size: 1.5rem;
+}
+.top-nav-links .customer-menu__items a:not(.button):hover,
+.top-nav-links .customer-menu__items a:not(.button):focus {
+    color: #12466f;
+}
+.top-nav-links .customer-menu__items a.customer-menu__logout:not(.button) {
+    color: #b42318;
+}
+.top-nav-links .customer-menu__items a::after {
+    display: none;
+}
+
+@media (max-width: 64rem) {
+    .top-nav {
+        position: relative;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.8rem 1.6rem 1.2rem;
+    }
+    .top-nav-title .brand-logo {
+        height: 6.4rem;
+    }
+    .top-nav-title {
+        text-align: center;
+    }
+    .top-nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem 1.4rem;
+    }
+    .top-nav-links a,
+    .top-nav-links a.button {
+        margin-left: 0;
+    }
+}
+
+/* View action */
+.view.content .text {
+    margin-top: 1.2rem;
+}
+.related {
+    margin-top: 2rem;
+}
+
+/* Flash messages */
+.message {
+    overflow-wrap: anywhere;
+    padding: 1.2rem 1.6rem;
+    background: var(--color-message-info-bg);
+    color: var(--color-message-info-text);
+    border-color: var(--color-message-info-border);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: var(--radius-sm);
+    margin: 0 0 1.6rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.message.hidden {
+    display: none;
+}
+.message.success {
+    background: var(--color-message-success-bg);
+    color: var(--color-message-success-text);
+    border-color: var(--color-message-success-border);
+}
+.message.warning {
+    background: var(--color-message-warning-bg);
+    color: var(--color-message-warning-text);
+    border-color: var(--color-message-warning-border);
+}
+.message.error {
+    background: var(--color-message-error-bg);
+    color: var(--color-message-error-text);
+    border-color: var(--color-message-error-border);
+}
+
+/* Forms */
+label, legend {
+    margin-bottom: 0.6rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+input[type='text'], input[type='email'], input[type='password'], input[type='tel'],
+input[type='number'], input[type='date'], input[type='datetime-local'], input[type='time'],
+input[type='search'], input[type='url'], select, textarea {
+    height: auto;
+    min-height: 4.4rem;
+    padding: 0.9rem 1.2rem;
+    background-color: var(--color-white);
+    border: 1px solid #cbd5df;
+    border-radius: var(--radius-sm);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    box-shadow: inset 0 1px 1px rgba(15, 34, 51, 0.03);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input[type='text']:focus, input[type='email']:focus, input[type='password']:focus,
+input[type='tel']:focus, input[type='number']:focus, input[type='date']:focus,
+input[type='datetime-local']:focus, input[type='time']:focus, input[type='search']:focus, input[type='url']:focus,
+select:focus, textarea:focus {
+    border-color: var(--color-brand-navy-mid);
+    box-shadow: 0 0 0 3px rgba(27, 94, 150, 0.18);
+    outline: none;
+}
+::placeholder {
+    color: #8b99a6;
+}
+.input {
+    margin-bottom: 1.8rem;
+}
+.input input,
+.input select,
+.input textarea {
+    margin-bottom: 0;
+}
+.input label:has(input[type='checkbox']),
+.input label:has(input[type='radio']) {
+    display: flex;
+    align-items: center;
+}
+.input label:has(~ label),
+.input label:has(input[type='radio']) {
+    margin-bottom: 0;
+}
+.input label > input[type='checkbox'],
+.input label > input[type='radio'] {
+    margin-right: 1.0rem;
+}
+input[type='color'] {
+    max-width: 4rem;
+    padding: 0.3rem .5rem 0.3rem;
+}
+.error-message {
+    color: var(--color-message-error-text);
+}
+.input.error input,
+.input.error select,
+.input.error textarea {
+    border-color: var(--color-message-error-border);
+}
+
+/* Paginator */
+.paginator {
+    text-align: right;
+}
+.paginator p {
+    margin-bottom: 0;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0 0 1rem 0;
+    padding: 0;
+}
+.pagination li {
+    display: inline-block;
+    margin: 0.25em;
+    text-align: center;
+}
+.pagination a {
+    color: var(--color-brand-navy);
+    display: inline-block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 3.6rem;
+    min-width: 3.6rem;
+    padding: 0;
+    position: relative;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: background .15s, color .15s;
+}
+.pagination li.active a,
+.pagination a:hover {
+    background: var(--color-brand-navy-pale);
+    text-decoration: none;
+}
+.pagination .disabled a {
+    cursor: not-allowed;
+    color: var(--color-lightgray);
+    text-decoration: none;
+}
+.first a,
+.prev a,
+.next a,
+.last a {
+    padding: 0 .75rem;
+}
+.disabled a:hover {
+    background: initial;
+    color: initial;
+}
+.asc:after {
+    content: " \2193";
+}
+.desc:after {
+    content: " \2191";
+}
+
+/* Error in non debug mode */
+.error-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+}
+
+@media screen and (max-width: 640px) {
+    /* Fix milligram not having a responsive column system */
+    .row .column[class*='column-'] {
+        flex: 0 0 100%;
+        max-width: 100%
+    }
+    .top-nav {
+        margin: 0 auto;
+    }
+    .side-nav {
+        margin-bottom: 1rem;
+    }
+    .heading {
+        margin-bottom: 1rem;
+    }
+    .side-nav-item {
+        display: inline;
+        margin: 0 1.5rem 0 0;
+    }
+    .asc:after {
+        content: " \2192";
+    }
+    .desc:after {
+        content: " \2190";
+    }
+}
+
+/* The Cloudflare check is a fixed 300px wide. On the narrowest phones it scrolls inside its own box
+   rather than pushing past the form. */
+.cf-turnstile {
+    max-width: 100%;
+    overflow-x: auto;
+}

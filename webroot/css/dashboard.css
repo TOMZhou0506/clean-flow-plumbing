@@ -1,0 +1,2011 @@
+/*
+ * Enquiry dashboard.
+ *
+ * Blue, white and yellow, following the colour direction we agreed with the
+ * client.
+ *
+ * I checked every foreground/background pair I use for text against WCAG 2.1
+ * AA (4.5:1 for body text, 3:1 for large text). The lowest I ended up with is
+ * 5.47:1. I never put text on the yellow: #F2C230 on white measures 1.63:1,
+ * which fails badly, so I use it only for borders, accent bars and the unread
+ * marker.
+ */
+
+:root {
+    --dash-blue: #12466F;      /* 9.42:1 on white */
+    --dash-blue-mid: #1B5E96;  /* 6.24:1 on white */
+    --dash-blue-pale: #EEF4FA;
+    --dash-yellow: #F2C230;    /* accents only, never behind text */
+    --dash-ink: #0F2233;       /* 16:1 on white */
+    --dash-muted: #5B6B7A;     /* 5.5:1 on white, the lowest pair used */
+    --dash-line: #E3E9EF;
+    --dash-bg: #FFFFFF;
+    --dash-radius: 10px;
+    --dash-shadow: 0 1px 2px rgba(15, 34, 51, 0.06), 0 1px 3px rgba(15, 34, 51, 0.08);
+
+    /*
+     * Type scale. The page root is set to 62.5% (10px) by milligram, so
+     * 1rem here = 10px, not the browser default 16px. Every dashboard font
+     * size below is written against that 10px root so the scale stays
+     * legible and consistent — the old values (0.78rem-0.92rem) were
+     * written as if 1rem = 16px and rendered as low as 7.8px.
+     */
+    --dash-fs-xs: 1.2rem;   /* 12px: badges, table headers, small labels */
+    --dash-fs-sm: 1.35rem;  /* 13.5px: secondary/meta text */
+    --dash-fs-md: 1.45rem;  /* 14.5px: buttons, table text */
+    --dash-fs-lg: 1.9rem;   /* 19px: card titles */
+    --dash-fs-xl: 3rem;     /* 30px: page title */
+    --dash-fs-stat: 2.4rem; /* 24px: stat card numbers */
+}
+
+/* The shared layout wraps every page in milligram's .container, which caps
+   out at 112rem (1120px). That's narrower than this table needs, so widen
+   it on the dashboard pages that load this stylesheet.
+
+   160rem rather than 1600px. The root is 62.5%, so 1rem is 10px and the two
+   are the same width at default settings, but the rem version grows with the
+   reader's own font size instead of ignoring it. min() with 100% keeps the
+   page inside the viewport on a narrow screen rather than letting it set a
+   width the screen cannot honour. */
+.main .container {
+    max-width: min(160rem, 100%);
+}
+
+.dash {
+    max-width: min(160rem, 100%);
+    margin: 0 auto;
+    padding: 24px 32px 64px;
+    color: var(--dash-ink);
+    /* A long name, email or address with no spaces in it has nowhere to wrap, so it used to push
+       the whole page sideways. `anywhere` lets it break wherever it has to, and, unlike
+       break-word, also lets flex and grid items shrink below the length of the longest word. */
+    overflow-wrap: anywhere;
+}
+
+/* ---------- header ---------- */
+
+/* A plain title row with space beneath it. The old heavy yellow rule under
+   every page title added visual noise on top of the cards below it. */
+.dash__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    min-width: 0;
+}
+
+.dash__title {
+    margin: 0;
+    font-size: var(--dash-fs-xl);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--dash-ink);
+}
+
+.dash__header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* ---------- buttons ---------- */
+
+.dash__btn {
+    display: inline-block;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 9px 16px;
+    border: 1px solid var(--dash-blue);
+    border-radius: 8px;
+    background: var(--dash-blue);
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: var(--dash-fs-md);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: var(--dash-shadow);
+}
+
+.dash__btn:hover,
+.dash__btn:focus {
+    background: var(--dash-blue-mid);
+    border-color: var(--dash-blue-mid);
+    color: #FFFFFF;
+}
+
+.dash__btn--ghost {
+    background: #FFFFFF;
+    border-color: #CBD5DF;
+    color: var(--dash-blue);
+    box-shadow: none;
+}
+
+.dash__btn--ghost:hover,
+.dash__btn--ghost:focus {
+    background: var(--dash-blue-pale);
+    border-color: var(--dash-blue-mid);
+    color: var(--dash-blue);
+}
+
+.dash__btn--small {
+    width: 100px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: var(--dash-fs-xs);
+    text-align: center;
+    box-shadow: none;
+}
+
+/* I keep a visible focus ring so the dashboard is usable from the keyboard. */
+.dash__btn:focus-visible,
+.dash__table a:focus-visible {
+    outline: 3px solid var(--dash-yellow);
+    outline-offset: 2px;
+}
+
+/* ---------- summary cards ---------- */
+
+.dash__stats {
+    display: grid;
+    /* 11rem, so the seven summary cards fit on one row at a laptop width instead of wrapping onto two. */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: 10px;
+    margin: 12px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash__stat {
+    padding: 10px 14px;
+    border: 1px solid var(--dash-line);
+    border-radius: var(--dash-radius);
+    background: #FFFFFF;
+    box-shadow: var(--dash-shadow);
+}
+
+.dash__stat a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dash__stat a:focus-visible {
+    outline: 3px solid var(--dash-yellow);
+    outline-offset: 3px;
+}
+
+.dash__stat--accent {
+    border-color: #EBD27A;
+    background: #FFFBEA;
+}
+
+.dash__stat-value {
+    display: block;
+    font-size: var(--dash-fs-stat);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--dash-ink);
+}
+
+.dash__stat-label {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--dash-fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--dash-muted);
+}
+
+/* ---------- filters ---------- */
+
+/*
+ * The filter bar fits as many controls per row as the width allows.
+ *
+ * It used to be seven named columns that snapped to one at 880px, so at 900px
+ * you got seven cramped boxes and at 879px a tall stack, with nothing in
+ * between. auto-fit works it out per width instead: the columns stay at least
+ * 14rem, and the browser fits however many of those it can and shares out the
+ * remainder. No breakpoint needed, and it holds up at sizes nobody thought to
+ * test.
+ *
+ * min(100%, 14rem) rather than a bare 14rem, so on a screen narrower than a
+ * single column the column shrinks to the screen instead of overflowing it.
+ */
+.dash__filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 12px;
+    align-items: end;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--dash-line);
+    border-radius: var(--dash-radius);
+    background: #FFFFFF;
+    box-shadow: var(--dash-shadow);
+}
+
+.dash__filters .input {
+    margin: 0;
+}
+
+.dash__filters label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: var(--dash-fs-xs);
+    font-weight: 600;
+    color: var(--dash-muted);
+}
+
+.dash__filters input,
+.dash__filters select {
+    width: 100%;
+    min-height: 0;
+    padding: 8px 10px;
+    border: 1px solid #CBD5DF;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: var(--dash-ink);
+}
+
+.dash__filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* The 880px breakpoint that used to sit here is gone. auto-fit above covers
+   every width on its own, so there is nothing left for it to do. */
+
+/* ---------- table ---------- */
+
+.dash__table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--dash-line);
+    border-radius: var(--dash-radius);
+    background: #FFFFFF;
+    box-shadow: var(--dash-shadow);
+}
+
+.dash__table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background: #FFFFFF;
+    font-size: var(--dash-fs-md);
+    line-height: 1.4;
+}
+
+.dash__table th,
+.dash__table td {
+    padding: 9px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--dash-line);
+    border-top: 0;
+    vertical-align: top;
+    overflow-wrap: break-word;
+}
+
+.dash__table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Fixed column widths so the enquiries table always fits its container
+   instead of forcing a horizontal scrollbar — long emails/subjects/badges
+   wrap instead of bleeding past their column. Compliance and Actions get
+   the largest share since a compliance pill or a stacked button pair needs
+   the room. Scoped to this modifier (rather than the bare .dash__table)
+   because the column count/meaning is specific to the enquiries table —
+   the audit trail and admin tables have different columns and are fine
+   with the browser's normal auto layout. */
+/* 100rem is the same 1000px at default settings, but it grows with the
+   reader's font size, so raising the text size gives the columns more room
+   rather than squeezing the same width harder.
+
+   I kept the min-width rather than letting this collapse to 100%. Seven
+   columns of customer data on a phone would be about 50px each, which is
+   unreadable; the wrapper scrolls sideways instead, which is the better of
+   the two bad options for a dense table. */
+.dash__table--enquiries {
+    min-width: 100rem;
+    table-layout: fixed;
+}
+
+.dash__table--enquiries th:nth-child(1) { width: 17%; }
+.dash__table--enquiries th:nth-child(2) { width: 13%; }
+.dash__table--enquiries th:nth-child(3) { width: 22%; }
+.dash__table--enquiries th:nth-child(4) { width: 24%; }
+.dash__table--enquiries th:nth-child(5) { width: 12%; }
+.dash__table--enquiries th:nth-child(6) { width: 12%; text-align: center; }
+
+/* Keep a long, unbroken job description from sizing the entire table and
+   pushing Actions out of view. The minimum width preserves readable dates
+   and badges on smaller screens; the wrapper scrolls only when necessary. */
+.dash__table--job-requests {
+    min-width: 105rem;
+    table-layout: fixed;
+}
+
+/* Manager oversight remains readable without allowing long descriptions to resize columns. */
+.dash__table--manager-jobs {
+    min-width: 90rem;
+    table-layout: fixed;
+}
+
+.dash__table--manager-jobs th:nth-child(1) { width: 20%; }
+.dash__table--manager-jobs th:nth-child(2) { width: 19%; }
+.dash__table--manager-jobs th:nth-child(3) { width: 10%; }
+.dash__table--manager-jobs th:nth-child(4) { width: 13%; }
+.dash__table--manager-jobs th:nth-child(5) { width: 17%; }
+.dash__table--manager-jobs th:nth-child(6) { width: 21%; }
+
+.dash__table--job-requests th:nth-child(1) { width: 16%; }
+.dash__table--job-requests th:nth-child(2) { width: 16%; }
+.dash__table--job-requests th:nth-child(3) { width: 20%; }
+.dash__table--job-requests th:nth-child(4) { width: 16%; }
+.dash__table--job-requests th:nth-child(5) { width: 18%; }
+.dash__table--job-requests th:nth-child(6) { width: 14%; }
+
+.dash__table--job-requests td:nth-child(2),
+.dash__table--job-requests td:nth-child(3) {
+    overflow-wrap: anywhere;
+}
+
+/* On narrower viewports the other columns may scroll, but the action buttons
+   remain available without searching for the horizontal scrollbar. */
+.dash__table--job-requests .dash__actions-col {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    background: #FFFFFF;
+    box-shadow: -6px 0 8px -8px rgb(0 0 0 / 30%);
+}
+
+.dash__table--job-requests thead .dash__actions-col {
+    z-index: 2;
+    background: #F6F9FC;
+}
+
+.dash__table--job-requests tbody tr:hover .dash__actions-col {
+    background: var(--dash-blue-pale);
+}
+
+/* A light header with muted caps, not a solid navy bar: the heavy bar made
+   every table the loudest thing on the page and fought the data in it. */
+.dash__table thead th {
+    background: #F6F9FC;
+    color: var(--dash-muted);
+    font-size: var(--dash-fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--dash-line);
+}
+
+.dash__table thead th a,
+.dash__table thead th a:hover {
+    color: var(--dash-muted);
+    text-decoration: none;
+}
+
+.dash__table thead th a.asc::after { content: " \25B2"; }
+.dash__table thead th a.desc::after { content: " \25BC"; }
+
+.dash__table tbody tr:hover {
+    background: var(--dash-blue-pale);
+}
+
+/* I mark unread rows with a yellow edge. I do not rely on colour alone: the
+   status column still spells the state out, so this works without colour
+   vision. */
+.dash__table tbody tr.is-unread {
+    box-shadow: inset 4px 0 0 var(--dash-yellow);
+    font-weight: 600;
+}
+
+.dash__nowrap { white-space: nowrap; }
+
+.dash__preview {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--dash-fs-sm);
+    font-weight: 400;
+    color: var(--dash-muted);
+}
+
+/* Two lines at most in a list cell, so one very long value cannot make a row several screens tall.
+   The whole value is on the detail page and in the cell's tooltip. */
+.dash__clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+}
+
+/* display:flex directly on a <td> inside a table-layout:fixed table renders
+   inconsistently across browsers — the flex content can paint past the
+   column's fixed width instead of wrapping inside it. Plain inline-block
+   buttons with their own margin wrap safely within the cell instead. */
+.dash__actions-col .dash__btn {
+    margin: 0 6px 6px 0;
+}
+
+.dash__actions-col form {
+    display: inline;
+}
+
+.dash__empty {
+    padding: 32px 12px;
+    text-align: center;
+    color: var(--dash-muted);
+}
+
+/* ---------- status badges ---------- */
+
+.dash__badge {
+    display: inline-block;
+    max-width: 100%;
+    padding: 3px 9px;
+    border-radius: 14px;
+    border: 1px solid var(--dash-line);
+    font-size: var(--dash-fs-xs);
+    font-weight: 600;
+    line-height: 1.3;
+    /* A long status such as "Pending plumber approval" wraps inside a narrow column instead of
+       spilling out of it. Short ones still sit on one line. */
+    white-space: normal;
+}
+
+.dash__badge--new {
+    background: #FFF7DE;
+    border-color: var(--dash-yellow);
+    color: #6B4E00;           /* 7.7:1 on #FFF7DE */
+}
+
+.dash__badge--read {
+    background: var(--dash-blue-pale);
+    border-color: var(--dash-blue-mid);
+    color: var(--dash-blue);
+}
+
+.dash__badge--replied {
+    background: #E6F4EA;
+    border-color: #2E7D32;
+    color: #1E4620;           /* 9.47:1 on #E6F4EA */
+}
+
+.dash__badge--archived {
+    background: #F3F5F7;
+    color: var(--dash-muted);
+}
+
+/*
+ * Job request statuses.
+ *
+ * A separate set from the enquiry ones above, because they answer a different
+ * question: an enquiry status is "has anyone read this message", a job request
+ * status is "what did the office decide about this work". Reusing the same
+ * colours would suggest the two columns mean the same thing.
+ *
+ * Each stage of the workflow has its own colour, so a column of badges can be
+ * read at a glance: yellow submitted, orange compliance check, blue ready to
+ * assign, purple waiting for the plumber, teal in progress, green completed,
+ * red for anything that stopped. Archived falls through to the shared grey
+ * rule above rather than being repeated here.
+ *
+ * Every pair is checked against WCAG 2.1 AA (4.5:1), same as the rest.
+ */
+
+.dash__badge--submitted {
+    background: #FFF7DE;
+    border-color: var(--dash-yellow);
+    color: #6B4E00;           /* 7.7:1 on #FFF7DE */
+}
+
+.dash__badge--reviewing {
+    background: #FFF1E0;
+    border-color: #E08A00;
+    color: #7A4100;           /* 7.32:1 on #FFF1E0 */
+}
+
+.dash__badge--approved {
+    background: var(--dash-blue-pale);
+    border-color: var(--dash-blue-mid);
+    color: var(--dash-blue);  /* 8.1:1 on #EAF2F8 */
+}
+
+.dash__badge--assigned {
+    background: #F1EAFB;
+    border-color: #7B4FC9;
+    color: #4A2A8A;           /* about 9:1 on #F1EAFB */
+}
+
+.dash__badge--in_progress {
+    background: #DFF3F4;
+    border-color: #00838F;
+    color: #004D54;           /* about 9:1 on #DFF3F4 */
+}
+
+.dash__badge--completed {
+    background: #E6F4EA;
+    border-color: #2E7D32;
+    color: #1E4620;           /* 9.47:1 on #E6F4EA */
+}
+
+.dash__badge--declined,
+.dash__badge--unable_to_complete {
+    background: #FCE8E6;
+    border-color: #D93025;
+    color: #8A1C1C;           /* 7.87:1 on #FCE8E6 */
+}
+
+/* Workflow stage (Enquiry/Approved/Scheduled/Completed) - deliberately its
+   own blue rather than reusing a status/compliance colour, since it is a
+   third, independent piece of state and conflating its colour with either
+   of the others would make a badge lie about which one changed. */
+.dash__badge--stage {
+    background: var(--dash-blue-pale);
+    border-color: var(--dash-blue-mid);
+    color: var(--dash-blue);
+}
+
+/*
+ * Compliance status. Green/orange/red rather than the blue/yellow used
+ * above, on purpose: this is a pass/fail regulatory signal, not a workflow
+ * stage, and it needs to read at a glance in a column of many rows. Each
+ * pair is checked against WCAG 2.1 AA (4.5:1), same as every other badge
+ * here.
+ */
+
+.dash__badge--compliance-met {
+    background: #E6F4EA;
+    border-color: #2E7D32;
+    color: #1E4620;            /* 9.47:1 on #E6F4EA */
+}
+
+.dash__badge--compliance-partial {
+    background: #FFF1E0;
+    border-color: #E08A00;
+    color: #7A4100;            /* 7.32:1 on #FFF1E0 */
+}
+
+.dash__badge--compliance-pending {
+    background: #FCE8E6;
+    border-color: #D93025;
+    color: #8A1C1C;            /* 7.87:1 on #FCE8E6 */
+}
+
+/* ---------- detail card ---------- */
+
+.dash__card {
+    margin-top: 20px;
+    padding: 28px;
+    border: 1px solid var(--dash-line);
+    border-radius: 14px;
+    background: #FFFFFF;
+    box-shadow: var(--dash-shadow);
+}
+
+/* Two cards side by side at the same height, e.g. a job's details beside its
+   checklist. They stack once the screen is too narrow for both. */
+.dash__split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+    align-items: stretch;
+}
+
+@media (max-width: 1100px) {
+    .dash__split {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- a job's assignment: plumber, vehicle and visit tiles ---------- */
+
+.allocation-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+/* Plumber and vehicle side by side, the visit across the full width below. */
+.allocation-tile--wide {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 520px) {
+    .allocation-tiles {
+        grid-template-columns: 1fr;
+    }
+}
+
+.allocation-tile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--dash-line);
+    border-radius: 12px;
+    background: #F8FAFC;
+}
+
+.allocation-tile__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--dash-blue);
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.allocation-tile__icon--square {
+    border-radius: 10px;
+}
+
+.allocation-tile__icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.allocation-tile__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.allocation-tile__label {
+    color: var(--dash-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.allocation-tile__value {
+    overflow: hidden;
+    color: var(--dash-ink);
+    font-size: 15px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.allocation-tile__meta {
+    color: var(--dash-muted);
+    font-size: 13px;
+}
+
+/* Assigned -> approved and started -> finished, left to right. */
+.allocation-timeline {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.allocation-timeline__step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding-top: 22px;
+}
+
+/* The line between dots, drawn from each dot to the next. */
+.allocation-timeline__step::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--dash-line);
+}
+
+.allocation-timeline__step.is-done::before {
+    background: #15803D;
+}
+
+.allocation-timeline__dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #CBD5DF;
+    border-radius: 50%;
+    background: #FFFFFF;
+}
+
+.allocation-timeline__step.is-done .allocation-timeline__dot {
+    border-color: #15803D;
+    background: #15803D;
+    box-shadow: inset 0 0 0 2px #FFFFFF;
+}
+
+.allocation-timeline__label {
+    color: var(--dash-ink);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.allocation-timeline__step:not(.is-done) .allocation-timeline__label {
+    color: var(--dash-muted);
+    font-weight: 500;
+}
+
+.allocation-timeline__time {
+    color: var(--dash-muted);
+    font-size: 12px;
+}
+
+.allocation-rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    border-left: 4px solid #F2C230;
+    border-radius: 8px;
+    background: #FFFBEA;
+}
+
+.allocation-rating__stars {
+    color: #B45309;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.allocation-rating__text {
+    color: var(--dash-ink);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.allocation-reason {
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    border-left: 4px solid #B91C1C;
+    border-radius: 8px;
+    background: #FEF2F2;
+}
+
+.allocation-reason p {
+    margin: 4px 0 0;
+}
+
+.dash__card-actions.allocation-actions {
+    margin-top: 0;
+}
+
+.dash__form-error {
+    margin: 8px 0 14px;
+    color: #B42318;
+    font-weight: 600;
+}
+
+.dash__card-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.dash__card-title {
+    margin: 0 0 4px;
+    font-size: var(--dash-fs-lg);
+    font-weight: 700;
+    color: var(--dash-ink);
+}
+
+/* A title that sits directly in a card (not inside the header row) needs
+   space above it and a little below, or it crowds the box that follows. */
+.dash__card > .dash__card-title {
+    margin: 22px 0 10px;
+}
+
+.dash__card-sub {
+    margin: 0;
+    color: var(--dash-muted);
+    font-size: var(--dash-fs-sm);
+}
+
+.dash__card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.dash__meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 4px 16px;
+    margin: 18px 0;
+    padding: 14px 0;
+    border-top: 1px solid var(--dash-line);
+    border-bottom: 1px solid var(--dash-line);
+    font-size: var(--dash-fs-md);
+}
+
+.dash__meta dt {
+    font-weight: 600;
+    color: var(--dash-muted);
+}
+
+.dash__meta dd {
+    margin: 0;
+}
+
+.dash__message {
+    padding: 18px;
+    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px solid var(--dash-line);
+    line-height: 1.6;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.dash__card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+/* Without this the notes field's wrapper and the submit button are flex
+   siblings with the default align-items:stretch, so the button balloons to
+   match the taller textarea instead of sizing to its own content. */
+.dash__card-actions .input {
+    flex: 1 1 260px;
+    margin: 0;
+}
+
+.dash__card-actions .dash__btn {
+    flex: 0 0 auto;
+}
+
+.dash__card-actions form {
+    display: inline;
+}
+
+/* ---------- paginator ---------- */
+
+.dash__paginator {
+    margin-top: 18px;
+    text-align: center;
+    color: var(--dash-muted);
+    font-size: var(--dash-fs-md);
+}
+
+.dash__paginator .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    padding: 0;
+    list-style: none;
+}
+
+.dash__paginator .pagination li a,
+.dash__paginator .pagination li.active a {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid var(--dash-line);
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: var(--dash-blue);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dash__paginator .pagination li.active a {
+    background: var(--dash-blue);
+    color: #FFFFFF;
+    border-color: var(--dash-blue);
+}
+
+/* ---------- side navigation (customer portal and office) ---------- */
+
+/*
+ * A fixed rail, shared by the customer portal's sidebar and the office's
+ * admin_sidebar. Both wanted the same two things: reach the very top of the
+ * page instead of starting below a separate logo banner, and be collapsible.
+ * Neither is possible with a plain grid column, which only spans as much
+ * height as its row and cannot be slid off-screen independently of the
+ * content next to it, so this is fixed to the viewport instead.
+ *
+ * The logo lives inside the rail now, so it is the thing making the rail
+ * reach the top - there is no separate banner above it to hide the shared
+ * top-nav for any more.
+ */
+body:has(.portal-nav) .top-nav {
+    display: none;
+}
+
+.portal-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 25rem;
+    background: #FFFFFF;
+    border-right: 1px solid var(--dash-line);
+    box-shadow: 1px 0 0 rgba(15, 34, 51, 0.02), 8px 0 24px -12px rgba(15, 34, 51, 0.12);
+    overflow-y: auto;
+    z-index: 200;
+    transition: transform 0.2s ease;
+}
+
+.portal-nav__brand {
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px;
+    border-bottom: 1px solid var(--dash-line);
+}
+
+.portal-nav__logo {
+    display: block;
+    height: 8rem;
+    width: auto;
+}
+
+/*
+ * The toggle is a sibling of .portal-nav, not a child of it, so it stays put
+ * and reachable while the rail itself slides away underneath it.
+ */
+.portal-nav__toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 210;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 40px;
+    height: 40px;
+    min-height: 0;
+    padding: 0;
+    background: #FFFFFF;
+    border: 1px solid var(--dash-line);
+    border-radius: 10px;
+    box-shadow: var(--dash-shadow);
+    cursor: pointer;
+}
+
+.portal-nav__toggle:hover,
+.portal-nav__toggle:focus {
+    border-color: var(--dash-blue);
+}
+
+.portal-nav__toggle:focus-visible {
+    outline: 3px solid var(--dash-yellow);
+    outline-offset: 1px;
+}
+
+.portal-nav__toggle-bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--dash-ink);
+    border-radius: 1px;
+}
+
+/* Slid fully off-screen rather than display:none, so the transition has
+   something to animate and a screen reader still sees a consistent DOM. */
+body.portal-nav-closed .portal-nav {
+    transform: translateX(-100%);
+}
+
+/*
+ * Portal pages opt out of the shared centred container.
+ *
+ * This is the fix for the portal boxes being pushed across and clipped. The
+ * rail is position:fixed, so its 25rem is measured from the left edge of the
+ * viewport. The content's matching 25rem is a margin, so it is measured from
+ * whatever box contains it, and the shared layout wraps every page in
+ * milligram's .container, which is centred and capped. The two numbers are
+ * the same but they are counted from different places, so they only line up
+ * when the container happens to start at x=0.
+ *
+ * On anything wider than the container cap they disagree by half the leftover
+ * width: the content is shoved right, a dead band opens up between it and the
+ * rail, and the right hand edge runs past where the page expects to end.
+ *
+ * Taking the cap and the padding off on these pages puts the container's left
+ * edge back on the viewport's, which is the thing the rail was measured
+ * against. .dash keeps its own max-width and padding, so the text still does
+ * not stretch the full width of a large monitor.
+ *
+ * Scoped with :has(.portal-nav) so only pages that actually carry a rail are
+ * affected. The public pages keep the centred container.
+ */
+body:has(.portal-nav) .main .container {
+    max-width: none;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/*
+ * Flash messages render inside .container but outside .portal-content, so
+ * with the padding removed above they would start at x=0 and sit underneath
+ * the rail. They get the same offset, and follow the rail when it closes.
+ */
+body:has(.portal-nav) .main .container > .message {
+    margin-left: 25rem;
+    margin-right: 2rem;
+    transition: margin-left 0.2s ease;
+}
+
+body.portal-nav-closed .main .container > .message {
+    margin-left: 2rem;
+}
+
+.portal-content {
+    margin-left: 25rem;
+    /* Clears the fixed toggle button, which sits over this column's top-left
+       corner at every viewport width. */
+    padding-top: 76px;
+    transition: margin-left 0.2s ease;
+}
+
+body.portal-nav-closed .portal-content {
+    margin-left: 0;
+}
+
+/*
+ * Below the point the admin sidebar also collapses to one column, a fixed
+ * rail wide enough to read comfortably would swallow most of the screen. It
+ * becomes an overlay instead: closed by default, drawn on top of the content
+ * rather than pushing it over, with a backdrop to close it again by tapping
+ * outside.
+ */
+@media (max-width: 56.25em) {
+    .portal-content {
+        margin-left: 0;
+    }
+
+    /* The rail is an overlay at this width, so nothing needs to make room for
+       it. Without this the flash message would keep a 25rem gutter on a phone
+       and be squeezed into a column a few characters wide. */
+    body:has(.portal-nav) .main .container > .message {
+        margin-left: 2rem;
+    }
+
+    body:not(.portal-nav-closed) .portal-nav {
+        box-shadow: 0 0 0 100vmax rgb(28 39 51 / 45%);
+    }
+}
+
+/* ---------- login ---------- */
+
+/* The shared top-nav logo would be redundant next to the big centered one
+   below, so hide it on this page only. */
+body:has(.auth-wrapper) .top-nav {
+    display: none;
+}
+
+/* Sign-in and registration sit on a soft gradient instead of the flat page
+   grey, so the white card has something to lift off. */
+body:has(.auth-wrapper) {
+    background: linear-gradient(165deg, #E4EEF7 0%, #F4F7FA 55%, #FFFFFF 100%) fixed no-repeat;
+    min-height: 100vh;
+}
+
+.auth-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    padding: 40px 20px;
+}
+
+.auth-brand {
+    margin-bottom: 40px;
+}
+
+.auth-logo {
+    display: block;
+    height: 12rem;
+    width: auto;
+    margin: 0 auto;
+}
+
+.auth-back {
+    display: block;
+    width: 100%;
+    max-width: 460px;
+    margin: 0 0 14px;
+    color: var(--dash-muted);
+    font-size: var(--dash-fs-sm);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-back:hover,
+.auth-back:focus {
+    color: var(--dash-blue);
+    text-decoration: underline;
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 460px;
+    margin: 0;
+}
+
+.auth-form--wide {
+    max-width: 680px;
+}
+
+.auth-field-grid {
+    display: grid;
+    gap: 0 18px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.auth-secondary {
+    margin: 22px 0 0;
+    text-align: center;
+}
+
+.auth-card {
+    padding: 44px 40px;
+    border: 1px solid var(--dash-line);
+    border-radius: 18px;
+    background: #FFFFFF;
+    box-shadow: 0 4px 6px -2px rgba(15, 34, 51, 0.05), 0 24px 48px -12px rgba(15, 34, 51, 0.16);
+}
+
+.auth-title {
+    margin: 0 0 28px;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--dash-ink);
+}
+
+.auth-card label {
+    font-size: var(--dash-fs-md);
+    font-weight: 600;
+    color: var(--dash-muted);
+}
+
+.auth-card input {
+    height: 4.8rem;
+    background: #FFFFFF;
+    border: 1px solid #CBD5DF;
+    border-radius: 10px;
+    font-size: var(--dash-fs-md);
+}
+
+.auth-card input:focus {
+    background: #FFFFFF;
+    border-color: var(--dash-blue-mid);
+    box-shadow: 0 0 0 3px rgba(27, 94, 150, 0.18);
+}
+
+.auth-password-wrap {
+    position: relative;
+}
+
+.auth-password-wrap input {
+    /* Room for the toggle button so typed text never runs under it. */
+    padding-right: 6.5rem;
+}
+
+.auth-password-toggle {
+    /* top/bottom 0 + margin auto centers the button vertically within the
+       wrap's full height, regardless of its exact rendered height - more
+       reliable than top:50%/translateY, which drifted toward the bottom. */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0.6rem;
+    margin: auto 0;
+    height: fit-content;
+    min-height: 0;
+    padding: 0.6rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    box-shadow: none;
+    background: none;
+    color: var(--dash-blue);
+    font-family: inherit;
+    font-size: var(--dash-fs-xs);
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.auth-password-toggle:hover,
+.auth-password-toggle:focus {
+    text-decoration: underline;
+}
+
+.auth-submit {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 16px 0 0;
+    min-height: 0;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: var(--dash-blue);
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 1.7rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+}
+
+.auth-submit:hover,
+.auth-submit:focus {
+    background: var(--dash-blue-mid);
+}
+
+@media (max-width: 640px) {
+    .auth-card {
+        padding: 32px 24px;
+    }
+
+    .auth-field-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- office navigation ---------- */
+
+/*
+ * The client could not tell contact enquiries and job requests apart, because
+ * nothing on screen separated them. This sidebar gives each its own entry with
+ * a one line description, so the difference is stated rather than implied.
+ *
+ * This used to be a grid column sized as a proportion of the page, with its
+ * own sticky positioning and border (see "side navigation" above for why it
+ * is a fixed rail with the border and scrolling handled there instead). These
+ * are just the link-list styles from inside it, shared with the customer
+ * portal sidebar.
+ */
+
+.dash__nav {
+    padding: 18px 14px;
+}
+
+.dash__nav-heading {
+    margin: 0 12px 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8696A5;
+}
+
+.dash__nav-list {
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.dash__nav-list--footer {
+    margin-bottom: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--dash-line);
+}
+
+.dash__nav-item {
+    margin: 0;
+}
+
+.dash__nav-link {
+    display: block;
+    margin-bottom: 2px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #31465A;
+    font-size: var(--dash-fs-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dash__nav-link:hover,
+.dash__nav-link:focus {
+    background: var(--dash-blue-pale);
+    color: var(--dash-blue);
+}
+
+/*
+ * The current section is marked three ways: a filled background, a left bar,
+ * and aria-current in the markup. Colour alone would leave it invisible to a
+ * screen reader and unreliable for anyone with a colour vision difference.
+ */
+.dash__nav-link.is-current {
+    background: var(--dash-blue);
+    color: #FFFFFF;
+    box-shadow: 0 1px 2px rgba(18, 70, 111, 0.35);
+}
+
+.dash__nav-link.is-current:hover,
+.dash__nav-link.is-current:focus {
+    background: var(--dash-blue-mid);
+    color: #FFFFFF;
+}
+
+.dash__nav-link:focus-visible {
+    outline: 3px solid var(--dash-yellow);
+    outline-offset: -3px;
+}
+
+
+/* ---------- compliance call to action ---------- */
+
+/*
+ * This was a ghost button sitting next to "Back to list", so the action you
+ * came to the page to perform looked identical to the one that takes you away
+ * from it. The client's feedback was that they could not find it.
+ *
+ * It is now solid blue, matching the site rather than introducing a new
+ * colour. #12466F on white is 9.42:1, so white text on it clears WCAG AA
+ * comfortably at any size.
+ */
+
+.dash__btn--compliance {
+    background: var(--dash-blue);
+    border-color: var(--dash-blue);
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.dash__btn--compliance:hover,
+.dash__btn--compliance:focus {
+    background: var(--dash-blue-mid);
+    border-color: var(--dash-blue-mid);
+    color: #FFFFFF;
+}
+
+/*
+ * Outstanding work gets the yellow accent bar. The yellow is never behind the
+ * text: #F2C230 on white is 1.63:1 and would fail badly as a text background.
+ * It sits to the left of white-on-blue, which keeps the contrast intact while
+ * still drawing the eye.
+ */
+.dash__btn--compliance.is-outstanding {
+    box-shadow: inset 4px 0 0 var(--dash-yellow);
+    padding-left: 18px;
+}
+
+.dash__btn--compliance.dash__btn--small.is-outstanding {
+    padding-left: 14px;
+}
+
+/* ---------- sign-in page ---------- */
+
+/*
+ * One narrow column. A login form stretched across a full-width page reads as
+ * unfinished, and long input fields make a password harder to check.
+ */
+/* min() so the login card never sets a width the phone cannot honour. At
+   460px fixed it overflowed the narrowest handsets by a few pixels and took
+   the whole page sideways with it. */
+.dash--narrow {
+    max-width: min(46rem, 100%);
+}
+
+.login__form .input {
+    margin-bottom: 14px;
+}
+
+.login__form input[type="text"],
+.login__form input[type="password"] {
+    /* milligram sets a fixed height:3.8rem (38px) on every text input. That
+       is shorter than this padding (9px top+bottom) plus the page's normal
+       line-height actually needs, so the browser could not center the text
+       in the space left over and pinned it near the top instead - "the text
+       is on the line" in the box rather than centered in it. height:auto
+       lets the box size itself from its own padding and line-height, which
+       centers correctly. */
+    height: auto;
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #CBD5DF;
+    border-radius: 10px;
+    /* Matches .auth-card input's pale blue everywhere else in this same
+       .auth-wrapper shell (Customers/register.php, the old login pages) -
+       this form now shares that shell, so its fields should not stand out
+       as the one white pair in it. */
+    background: #FFFFFF;
+    color: var(--dash-ink);
+}
+
+.login__form input[type="text"]:focus,
+.login__form input[type="password"]:focus {
+    background: #FFFFFF;
+    border-color: var(--dash-blue);
+}
+
+/* .login__form input[type="password"] above (specificity 0,2,1) would
+   otherwise win over .auth-password-wrap input's padding-right (0,1,1) and
+   collapse it back to 10px, since this rule is both more specific and
+   later in the file - putting the Show/Hide button right on top of the
+   typed text. This selector matches that specificity to win the tie. */
+.login__form .auth-password-wrap input[type="password"] {
+    padding-right: 6.5rem;
+}
+.password-guidance {
+    margin: -0.5rem 0 2rem;
+    color: #5a6672;
+}
+
+.password-guidance p {
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+}
+
+.password-guidance ul {
+    margin-bottom: 0;
+}
+
+/* ---------- job progress bar ---------- */
+
+/*
+ * A thin bar that fills as stages are completed, with a labelled marker for
+ * each stage underneath, on the office job page. Driven by
+ * JobRequest::progressSteps().
+ */
+.job-progress {
+    margin-bottom: 20px;
+    padding: 22px 26px 26px;
+    border: 1px solid var(--dash-line);
+    border-radius: 14px;
+    background: #FFFFFF;
+    box-shadow: var(--dash-shadow);
+}
+
+.job-progress__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.job-progress__now {
+    font-size: var(--dash-fs-lg);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--dash-ink);
+}
+
+.job-progress__percent {
+    font-size: var(--dash-fs-sm);
+    font-weight: 600;
+    color: var(--dash-muted);
+}
+
+.job-progress__bar {
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #E8EEF4;
+}
+
+.job-progress__fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--dash-blue) 0%, var(--dash-blue-mid) 100%);
+    transition: width 0.4s ease;
+}
+
+.job-progress--stopped .job-progress__fill {
+    background: linear-gradient(90deg, var(--dash-blue) 0%, #C2362B 100%);
+}
+
+.job-progress__steps {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.job-progress__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    text-align: center;
+}
+
+.job-progress__marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 2px solid #CBD5DF;
+    border-radius: 50%;
+    background: #FFFFFF;
+    color: var(--dash-muted);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.job-progress__marker svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.job-progress__label {
+    font-size: var(--dash-fs-xs);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--dash-muted);
+}
+
+.job-progress__step.is-done .job-progress__marker {
+    border-color: var(--dash-blue);
+    background: var(--dash-blue);
+    color: #FFFFFF;
+}
+
+.job-progress__step.is-done .job-progress__label {
+    color: var(--dash-ink);
+}
+
+.job-progress__step.is-current .job-progress__marker {
+    border-color: var(--dash-blue);
+    background: #FFFFFF;
+    color: var(--dash-blue);
+    box-shadow: 0 0 0 4px rgba(242, 194, 48, 0.55);
+}
+
+.job-progress__step.is-current .job-progress__label {
+    color: var(--dash-blue);
+    font-weight: 800;
+}
+
+.job-progress__step.is-stopped .job-progress__marker {
+    border-color: #C2362B;
+    background: #C2362B;
+    color: #FFFFFF;
+}
+
+.job-progress__step.is-stopped .job-progress__label {
+    color: #9B2A21;
+    font-weight: 800;
+}
+
+@media (max-width: 56.25em) {
+    .job-progress__steps {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .job-progress__step {
+        flex-direction: row;
+        text-align: left;
+    }
+}
+
+/* ---------- compliance checklist ---------- */
+
+.checklist {
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.checklist__item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--dash-line);
+    border-radius: 10px;
+    background: #FFFFFF;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.checklist__item + .checklist__item {
+    margin-top: 10px;
+}
+
+.checklist__item.is-met {
+    border-color: #A9D5B5;
+    background: #F2FAF4;
+}
+
+.checklist__item.is-saving {
+    opacity: 0.6;
+}
+
+.checklist__form {
+    margin: 0;
+}
+
+.checklist__label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-size: var(--dash-fs-md);
+    font-weight: 600;
+    color: var(--dash-ink);
+    cursor: pointer;
+}
+
+.checklist__label--static {
+    cursor: default;
+}
+
+/* The real checkbox stays in the page for keyboards and screen readers; the
+   drawn box beside it is what people see. */
+.checklist__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.checklist__box {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 2px solid #AEBBC8;
+    border-radius: 7px;
+    background: #FFFFFF;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.checklist__box svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 3.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+}
+
+.checklist__label:hover .checklist__box {
+    border-color: var(--dash-blue-mid);
+}
+
+.checklist__input:checked + .checklist__box,
+.checklist__item.is-met .checklist__box {
+    border-color: #2E7D32;
+    background: #2E7D32;
+}
+
+.checklist__input:checked + .checklist__box svg,
+.checklist__item.is-met .checklist__box svg {
+    opacity: 1;
+}
+
+.checklist__input:focus-visible + .checklist__box {
+    outline: 3px solid var(--dash-yellow);
+    outline-offset: 2px;
+}
+
+.checklist__meta {
+    font-size: var(--dash-fs-xs);
+    color: var(--dash-muted);
+}
+
+.checklist__hint {
+    margin: 16px 0 0;
+    color: var(--dash-muted);
+    font-size: var(--dash-fs-sm);
+}
+
+/* The Proceed button appears once every item is ticked, so the panel it sits
+   in is given some weight. */
+.checklist__proceed {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 18px;
+    padding: 18px 20px;
+    border: 1px solid #EBD27A;
+    border-radius: 12px;
+    background: #FFFBEA;
+}
+
+.checklist__proceed p {
+    margin: 0;
+    font-weight: 600;
+    color: var(--dash-ink);
+}
+
+.dash__btn--proceed {
+    padding: 12px 28px;
+    border-color: var(--dash-yellow);
+    background: var(--dash-yellow);
+    color: #102B3D;
+    font-size: var(--dash-fs-lg);
+    font-weight: 800;
+}
+
+.dash__btn--proceed:hover,
+.dash__btn--proceed:focus {
+    border-color: #FFD45A;
+    background: #FFD45A;
+    color: #102B3D;
+}
+
+/* ---------- call-out banner ---------- */
+
+.callout {
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    border: 1px solid var(--dash-line);
+    border-radius: 12px;
+    background: #FFFFFF;
+    color: var(--dash-ink);
+}
+
+.callout--action {
+    border-color: #EBD27A;
+    background: #FFFBEA;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* The one-line address and customer under the title once the details card is no longer shown. */
+.job-context {
+    margin-top: 6px;
+}
+
+/* ---------- plumber dashboard ---------- */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 42rem), 1fr));
+    gap: 0 20px;
+    align-items: start;
+}
+
+.dash__card--attention {
+    border-color: #EBD27A;
+    background: #FFFDF3;
+}
+
+.job-list {
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.job-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: center;
+    margin: 0;
+    padding: 14px 0;
+    border-top: 1px solid var(--dash-line);
+}
+
+.job-row:first-child {
+    border-top: 0;
+}
+
+.job-row__date {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 56px;
+    border-radius: 10px;
+    background: var(--dash-blue-pale);
+    color: var(--dash-blue);
+}
+
+.job-row--attention .job-row__date {
+    background: #FFF1BE;
+    color: #6B4E00;
+}
+
+.job-row__day {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.job-row__month {
+    margin-top: 2px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.job-row__main {
+    flex: 1 1 18rem;
+    min-width: 0;
+}
+
+.job-row__address {
+    margin: 0;
+    font-size: var(--dash-fs-md);
+    font-weight: 700;
+    color: var(--dash-ink);
+    overflow-wrap: anywhere;
+}
+
+.job-row__meta {
+    margin: 2px 0 0;
+    font-size: var(--dash-fs-sm);
+    color: var(--dash-muted);
+}
+
+.job-row__status {
+    margin-top: 8px;
+}
+
+.dash__btn--proceed-small {
+    border-color: var(--dash-yellow);
+    background: var(--dash-yellow);
+    color: #102B3D;
+}
+
+.dash__btn--proceed-small:hover,
+.dash__btn--proceed-small:focus {
+    border-color: #FFD45A;
+    background: #FFD45A;
+    color: #102B3D;
+}
+
+.dashboard-footnote {
+    margin-top: 24px;
+    line-height: 1.6;
+}
+
+/*
+ * Sign-in and registration on a shorter window.
+ *
+ * The big logo, the gaps around it and the card's own padding add up to about
+ * 780px, so on an ordinary laptop window (and more so with the browser zoomed
+ * in) the Sign in button and the "Create an account" line sat on or below the
+ * bottom edge and the card looked cut off. On a short window everything is
+ * tightened so the whole card fits, and the page keeps a clear gap under the
+ * card whenever it does have to scroll.
+ */
+.auth-wrapper {
+    padding-bottom: 56px;
+}
+
+@media (max-height: 820px) {
+    .auth-wrapper {
+        justify-content: flex-start;
+        min-height: 0;
+        padding-top: 24px;
+    }
+
+    .auth-brand {
+        margin-bottom: 20px;
+    }
+
+    .auth-logo {
+        height: 8rem;
+    }
+
+    .auth-card {
+        padding: 32px 36px;
+    }
+
+    .auth-title {
+        margin-bottom: 18px;
+    }
+
+    .auth-secondary {
+        margin-top: 16px;
+    }
+}
+
+@media (max-height: 640px) {
+    .auth-wrapper {
+        padding-top: 16px;
+    }
+
+    .auth-brand {
+        margin-bottom: 12px;
+    }
+
+    .auth-logo {
+        height: 6rem;
+    }
+
+    .auth-card {
+        padding: 24px 32px;
+    }
+}
+
+/* ---------- vehicle bookings ---------- */
+
+/* Who has a vehicle and when, as a small stack under the status or in the
+   booking column. */
+.vehicle-booking {
+    display: block;
+    margin-top: 4px;
+}
+
+.vehicle-booking__who {
+    display: block;
+    font-weight: 600;
+}
+
+.vehicle-booking__when {
+    display: block;
+    color: var(--dash-muted);
+    font-size: var(--dash-fs-sm);
+}

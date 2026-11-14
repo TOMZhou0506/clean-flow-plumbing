@@ -1,0 +1,82 @@
+# CakePHP specific files #
+##########################
+/config/app_local.php
+/config/.env
+/logs/*
+/tmp/*
+/vendor/*
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+# Icon must end with two \r
+Icon
+ehthumbs.db
+Thumbs.db
+.directory
+
+# Tool specific files #
+#######################
+# PHPUnit
+.phpunit.cache
+tests.sqlite
+# vim
+*~
+*.swp
+*.swo
+# sublime text & textmate
+*.sublime-*
+*.stTheme.cache
+*.tmlanguage.cache
+*.tmPreferences.cache
+# Eclipse
+.settings/*
+# JetBrains, aka PHPStorm, IntelliJ IDEA
+.idea/*
+# NetBeans
+nbproject/*
+# Visual Studio Code
+.vscode
+# nova
+.nova
+# Sass preprocessor
+.sass-cache/
+# node
+/node_modules/*
+# yarn
+yarn-debug.log
+yarn-error.log
+
+# I rebuilt the dashboard as server rendered templates, so there is no
+# node_modules or build output left to ignore. I keep this line only so a
+# leftover frontend/ directory on someone's machine cannot be committed by
+# accident.
+/frontend/
+
+# Database dumps carry customer names, emails and phone numbers, so I keep
+# them out of the repo.
+*.sql.gz
+*.sql.zip
+/config/Migrations/dump*.sql
+clean_flow_plumbing_db.sql
+# and not the team's to maintain, so I keep them on my machine.
+#
+# I list them by name rather than ignoring /docs/ outright, so the team can
+# still add shared documentation here later. Delete a line to start tracking
+# that file again. Without these entries a plain `git add -A` puts them back.
+/docs/HANDOFF.md
+/docs/miro-reflection-*.txt
+/docs/Iteration1-Report-*.docx
+/docs/API.md
+/docs/SECURITY.md
+/docs/ACCEPTANCE-CRITERIA.md
+/docs/ADMIN-DASHBOARD-SETUP.md
+/docs/seed-submissions.sql
+/docs/Iteration1_RunSheet.md
+/docs/Iteration1_RunSheet.docx
+/docs/*
+

@@ -1,0 +1,702 @@
+/* Office team schedule: who is on a job, who is free, and everyone's day or
+   week at a glance. Sizes are in px because milligram sets the root font to
+   10px. Job colours match the plumber's own timetable. */
+
+.team {
+    --line: #d6e1eb;
+    --muted: #64748b;
+    --ink: #0f172a;
+    --assigned-bg: #dbeafe;
+    --assigned: #2563eb;
+    --progress-bg: #ffedd5;
+    --progress: #c2410c;
+    --done-bg: #dcfce7;
+    --done: #15803d;
+    --unable-bg: #fee2e2;
+    --unable: #b91c1c;
+    --off: #64748b;
+    --today: #f5b800;
+    --person-col: 230px;
+}
+
+.team__subtitle {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.team__clock {
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #eef2f6;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ---------- right-now tiles ---------- */
+
+.team__stat {
+    border-left: 4px solid transparent;
+}
+.team__stat--on_job { border-left-color: var(--progress); }
+.team__stat--available { border-left-color: var(--done); }
+.team__stat--unavailable { border-left-color: var(--off); }
+
+/* ---------- toolbar ---------- */
+
+.team-board__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+}
+
+.team-board__range {
+    margin: 0;
+    font-size: 20px;
+}
+
+.team-board__controls,
+.team-board__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.team-board__nav {
+    flex-wrap: nowrap;
+}
+
+/* dashboard.css stretches buttons to full width on phones; these three
+   belong together on one line. */
+.team-board__nav .dash__btn {
+    flex: none;
+    width: auto;
+    min-width: 36px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.team-board__nav .team-board__arrow {
+    padding-top: 0;
+    padding-bottom: 2px;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.team-toggle {
+    display: inline-flex;
+    padding: 3px;
+    border-radius: 999px;
+    background: #eef2f6;
+}
+
+.team-toggle__btn {
+    padding: 5px 16px;
+    border-radius: 999px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.team-toggle__btn:hover,
+.team-toggle__btn:focus-visible {
+    color: var(--ink);
+}
+
+.team-toggle__btn.is-active {
+    background: #ffffff;
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
+}
+
+.team-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 14px 0;
+    color: #334155;
+    font-size: 13px;
+}
+
+.team-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.team-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border-left: 4px solid;
+}
+.team-swatch--assigned { background: var(--assigned-bg); border-color: var(--assigned); }
+.team-swatch--in-progress { background: var(--progress-bg); border-color: var(--progress); }
+.team-swatch--completed { background: var(--done-bg); border-color: var(--done); }
+.team-swatch--unable { background: var(--unable-bg); border-color: var(--unable); }
+.team-swatch--off,
+.team-block--off,
+.team-chip--off {
+    background: repeating-linear-gradient(135deg, #e2e8f0 0, #e2e8f0 5px, #f1f5f9 5px, #f1f5f9 10px);
+}
+.team-swatch--off { border-color: var(--off); }
+
+.team-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+}
+
+.team-board__empty {
+    margin: 0;
+    color: var(--muted);
+}
+
+/* ---------- a person: avatar, name, status ---------- */
+
+.team-person {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    text-align: left;
+}
+
+.team-person__avatar {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #164a73;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* A presence dot on the avatar, coloured by what they are doing now. */
+.team-person__avatar::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    background: #94a3b8;
+}
+.team-person__avatar--on_job::after { background: #f97316; }
+.team-person__avatar--available::after { background: #22c55e; }
+.team-person__avatar--unavailable::after { background: #64748b; }
+
+.team-person__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    min-width: 0;
+}
+
+.team-person__text strong {
+    overflow: hidden;
+    max-width: 100%;
+    color: var(--ink);
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.team-rating {
+    margin-left: 4px;
+    color: #b45309;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.team-rating__count {
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.team-person__meta {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.team-pill {
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.team-pill--on_job { background: var(--progress-bg); color: #9a3412; }
+.team-pill--available { background: var(--done-bg); color: #166534; }
+.team-pill--unavailable { background: #e2e8f0; color: #334155; }
+.team-pill--off_hours { background: #f1f5f9; color: var(--muted); }
+
+/* ---------- day view: one row per plumber on an 08:00–17:00 axis ---------- */
+
+.team-day {
+    position: relative;
+    min-width: 860px;
+}
+
+.team-day__head,
+.team-day__row {
+    display: grid;
+    grid-template-columns: var(--person-col) 1fr;
+}
+
+.team-day__head {
+    background: #f6f9fc;
+    border-bottom: 1px solid var(--line);
+}
+
+.team-day__corner {
+    padding: 10px 14px;
+    border-right: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.team-day__hours {
+    position: relative;
+}
+
+.team-day__hours span {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* The first and last labels sit inside the edges instead of centred on them,
+   so nothing is clipped and the timeline can run edge to edge. */
+.team-day__hours span:first-child {
+    transform: translate(6px, -50%);
+}
+
+.team-day__hours span:last-child {
+    transform: translate(calc(-100% - 6px), -50%);
+}
+
+.team-day__row {
+    border-bottom: 1px solid var(--line);
+}
+
+.team-day__row:last-of-type {
+    border-bottom: 0;
+}
+
+.team-day__row:hover {
+    background: #fafcff;
+}
+
+.team-day__row .team-person {
+    padding: 12px 14px;
+    border-right: 1px solid var(--line);
+}
+
+/* The track spans the same width as the hour labels, so a block at 09:00
+   sits exactly under the 09:00 label. */
+.team-day__track {
+    position: relative;
+    min-height: 64px;
+    background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+    background-size: calc(100% / 9) 100%;
+}
+
+.team-day__free {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #94a3b8;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.team-block {
+    position: absolute;
+    top: 9px;
+    bottom: 9px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 4px 8px;
+    border-style: solid;
+    border-width: 1px 1px 1px 4px;
+    border-radius: 6px;
+    color: var(--ink);
+    font-size: 12px;
+    line-height: 1.3;
+    text-decoration: none;
+}
+
+.team-block strong,
+.team-block span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.team-block--off {
+    z-index: 1;
+    border-color: #94a3b8;
+    border-left-color: var(--off);
+    color: #334155;
+}
+
+a.team-block {
+    z-index: 2;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+a.team-block:hover,
+a.team-block:focus-visible {
+    z-index: 3;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
+    outline: none;
+}
+
+.team-block--assigned { background: var(--assigned-bg); border-color: var(--assigned); }
+.team-block--in-progress { background: var(--progress-bg); border-color: var(--progress); }
+.team-block--completed { background: var(--done-bg); border-color: var(--done); }
+.team-block--unable { background: var(--unable-bg); border-color: var(--unable); }
+
+/* The "now" line runs down every row. --now is how far through the working
+   day it is (0 to 1) across the track area. */
+.team-day__now {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--person-col) + (100% - var(--person-col)) * var(--now));
+    z-index: 4;
+    width: 2px;
+    margin-left: -1px;
+    background: #ef4444;
+    pointer-events: none;
+}
+
+.team-day__now span {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ---------- week view: plumbers down, Monday to Friday across ---------- */
+
+.team-week {
+    width: 100%;
+    min-width: 860px;
+    margin: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.team-week th,
+.team-week td {
+    padding: 10px;
+    border: 0;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+}
+
+.team-week tr > :last-child {
+    border-right: 0;
+}
+
+.team-week tbody tr:last-child > * {
+    border-bottom: 0;
+}
+
+.team-week thead th {
+    background: #f6f9fc;
+    text-align: center;
+}
+
+.team-week__corner {
+    width: var(--person-col);
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-align: left !important;
+    text-transform: uppercase;
+    vertical-align: middle !important;
+}
+
+.team-week thead a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.team-week thead a:hover .team-week__date,
+.team-week thead a:focus-visible .team-week__date {
+    text-decoration: underline;
+}
+
+.team-week__weekday {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.team-week__date {
+    display: block;
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.team-week .is-today {
+    background: #fffbeb;
+}
+
+.team-week thead .is-today {
+    background: #fff4cc;
+    box-shadow: inset 0 3px 0 var(--today);
+}
+
+.team-week tbody th {
+    font-weight: normal;
+    vertical-align: middle;
+}
+
+.team-week td {
+    display: table-cell;
+}
+
+.team-chip {
+    display: block;
+    box-sizing: border-box;
+    margin: 0 0 5px;
+    padding: 4px 8px;
+    border-style: solid;
+    border-width: 1px 1px 1px 4px;
+    border-radius: 6px;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+a.team-chip:hover,
+a.team-chip:focus-visible {
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.16);
+    outline: none;
+}
+
+.team-chip--assigned { background: var(--assigned-bg); border-color: var(--assigned); }
+.team-chip--in-progress { background: var(--progress-bg); border-color: var(--progress); }
+.team-chip--completed { background: var(--done-bg); border-color: var(--done); }
+.team-chip--unable { background: var(--unable-bg); border-color: var(--unable); }
+.team-chip--off {
+    border-color: #94a3b8;
+    border-left-color: var(--off);
+    color: #334155;
+    font-weight: 500;
+}
+
+.team-week__free {
+    color: #94a3b8;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* ---------- updates and upcoming time off ---------- */
+
+.team-panels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 0 24px;
+    align-items: start;
+}
+
+.team-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 22px;
+    height: 22px;
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #eef2f6;
+    color: #334155;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.team-panels__empty {
+    margin: 0;
+    color: var(--muted);
+}
+
+.team-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.team-list__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.team-list__item:last-child {
+    border-bottom: 0;
+}
+
+.team-list__item:target {
+    background: #fff8e1;
+}
+
+.team-list__dot {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.team-list__dot--new { background: #f97316; }
+.team-list__dot--withdrawn { background: #22c55e; }
+.team-list__dot--off { background: var(--off); }
+
+.team-list__text {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+}
+
+.team-list__meta {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.team-list__actions {
+    display: flex;
+    gap: 6px;
+}
+
+.team-list__actions form {
+    margin: 0;
+}
+
+/* ---------- fleet schedule: the same board, one row per vehicle ---------- */
+
+.team-person__avatar--vehicle {
+    border-radius: 10px;
+}
+
+.team-person__avatar--vehicle svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+}
+
+.team-person__avatar--in_use::after { background: #f97316; }
+.team-pill--in_use { background: var(--progress-bg); color: #9a3412; }
+
+.team-person__name {
+    overflow: hidden;
+    max-width: 100%;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.team-person__name:hover,
+.team-person__name:focus-visible {
+    text-decoration: underline;
+}
+
+.team-board__jump {
+    margin: 0 0 14px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #1e3a5f;
+    font-size: 13px;
+}
+
+.team-board__note {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* Names stay put while the timeline scrolls sideways on a narrow screen. */
+.team-day__corner,
+.team-day__row .team-person,
+.team-week__corner,
+.team-week tbody th {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+}
+
+.team-day__corner,
+.team-week__corner {
+    background: #f6f9fc;
+}
+
+.team-day__row .team-person,
+.team-week tbody th {
+    background: #ffffff;
+}
+
+@media (max-width: 680px) {
+    .team {
+        --person-col: 170px;
+    }
+
+    .team-pill {
+        white-space: normal;
+    }
+}

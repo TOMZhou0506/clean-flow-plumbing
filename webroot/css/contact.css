@@ -1,0 +1,67 @@
+/*
+ * Author: Xiaoyu Zhou
+ * Student ID: 35484632
+ * Date: Aug 20 2026
+ * Version: 1.0
+ *
+ * Function:
+ * Provides responsive layout and styling for the
+ * Contact Us form across desktop and mobile screens.
+ */
+.contact-form-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.contact-form-container h1 {
+    margin-bottom: 10px;
+}
+
+.contact-form-container p {
+    margin-bottom: 20px;
+}
+
+.contact-form-container input,
+.contact-form-container textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact-form-container textarea {
+    max-height: 400px;
+    max-width: 100%;
+    min-height: 120px;
+    overflow-y: auto;
+    resize: vertical;
+}
+
+.contact-form-container .char-counter {
+    color: #5b6b7a;
+    display: block;
+    font-size: 1.2rem;
+    margin: .4rem 0 0;
+    text-align: right;
+}
+
+.contact-form-container button {
+    margin-right: 10px;
+}
+
+/* CakePHP puts `required` on the container of every required control. */
+.contact-form-container .input.required > label::after {
+    color: var(--color-message-error-text);
+    content: " *";
+}
+
+@media (max-width: 600px) {
+    .contact-form-container {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+
+    .contact-form-container button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

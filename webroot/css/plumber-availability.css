@@ -1,0 +1,380 @@
+/* Plumber timetable: a week grid from 08:00 to 17:00 plus the form to mark
+   unavailable time. Sizes are in px because milligram sets the root font to
+   10px, which made rem-based calendar text far too small to read. */
+
+.availability-timetable {
+    --minute: 1.2px;
+    --hours-height: calc(540 * var(--minute));
+    --line: #d6e1eb;
+    --today: #f5b800;
+}
+
+.availability-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.availability-toolbar h2 {
+    margin: 0;
+}
+
+.availability-toolbar__actions,
+.availability-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.availability-legend {
+    margin: 16px 0;
+    gap: 8px 20px;
+    color: #334155;
+    font-size: 14px;
+}
+
+.availability-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.availability-legend i {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #94a3b8;
+    border-radius: 4px;
+}
+
+/* ---------- colours, shared by the legend and the grid ---------- */
+
+.availability-legend__work,
+.availability-day-track {
+    background-color: #ffffff;
+}
+
+.availability-legend__unavailable,
+.availability-block {
+    background: repeating-linear-gradient(
+        135deg,
+        #e2e8f0 0,
+        #e2e8f0 6px,
+        #f1f5f9 6px,
+        #f1f5f9 12px
+    );
+}
+
+.availability-legend__unavailable {
+    border-color: #64748b;
+}
+
+.timetable-legend--assigned,
+.timetable-job--assigned {
+    background-color: #dbeafe;
+    border-color: #2563eb;
+}
+
+.timetable-legend--in-progress,
+.timetable-job--in-progress {
+    background-color: #ffedd5;
+    border-color: #c2410c;
+}
+
+.timetable-legend--completed,
+.timetable-job--completed {
+    background-color: #dcfce7;
+    border-color: #15803d;
+}
+
+.timetable-legend--unable,
+.timetable-job--unable {
+    background-color: #fee2e2;
+    border-color: #b91c1c;
+}
+
+.availability-legend__weekend,
+.availability-day-track--weekend {
+    background-color: #f1f3f6;
+}
+
+/* ---------- the grid ---------- */
+
+.availability-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.availability-grid {
+    display: grid;
+    grid-template-columns: 64px repeat(7, minmax(120px, 1fr));
+    min-width: 904px;
+}
+
+.availability-grid--header {
+    background: #f6f9fc;
+}
+
+.availability-grid__corner,
+.availability-grid__day-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+    min-height: 84px;
+    padding: 12px 6px 10px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+}
+
+.availability-grid__corner {
+    justify-content: flex-end;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.availability-grid__weekday {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.availability-grid__date {
+    color: #0f172a;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.availability-grid__today {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--today);
+    color: #102b3d;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.availability-grid__day-heading.is-today {
+    background: #fff8e1;
+    box-shadow: inset 0 3px 0 var(--today);
+}
+
+.availability-date-pick {
+    margin: 6px 0 0;
+    padding: 4px 10px;
+    border: 1px solid #b6c7d8;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #164a73;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: none;
+    letter-spacing: 0;
+    /* cake.css gives every button a 44px minimum; 32px still clears the
+       24px target size and keeps the day headings compact. */
+    min-height: 32px;
+    cursor: pointer;
+}
+
+.availability-date-pick:hover,
+.availability-date-pick:focus-visible {
+    border-color: #164a73;
+    background: #164a73;
+    color: #ffffff;
+}
+
+/* Twelve px of room above and below the hours so the 08:00 and 17:00
+   labels are not clipped by the edges of the grid. */
+.availability-grid--body {
+    padding: 12px 0;
+}
+
+.availability-time-axis,
+.availability-day-track {
+    position: relative;
+    height: var(--hours-height);
+}
+
+.availability-time-axis span {
+    position: absolute;
+    top: calc(var(--start) * var(--minute));
+    right: 10px;
+    transform: translateY(-50%);
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.availability-day-track {
+    border-left: 1px solid var(--line);
+    /* An hour line every 60 minutes and a fainter half-hour line between. */
+    background-image:
+        repeating-linear-gradient(
+            to bottom,
+            #cbd9e6 0,
+            #cbd9e6 1px,
+            transparent 1px,
+            transparent calc(60 * var(--minute))
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent calc(30 * var(--minute)),
+            #eef2f6 calc(30 * var(--minute)),
+            #eef2f6 calc(30 * var(--minute) + 1px),
+            transparent calc(30 * var(--minute) + 1px),
+            transparent calc(60 * var(--minute))
+        );
+    background-size: 100% calc(60 * var(--minute) * 9 + 1px);
+    background-repeat: no-repeat;
+}
+
+.availability-day-track.is-today {
+    background-color: #fffbeb;
+}
+
+.availability-block,
+.timetable-job {
+    position: absolute;
+    top: calc(var(--start) * var(--minute));
+    height: calc(var(--length) * var(--minute));
+    left: 5px;
+    right: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.availability-block {
+    z-index: 1;
+    border: 1px solid #94a3b8;
+    border-left: 4px solid #64748b;
+    color: #334155;
+}
+
+.timetable-job {
+    z-index: 2;
+    display: block;
+    border-style: solid;
+    border-width: 1px 1px 1px 4px;
+    color: #0f172a;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.timetable-job:hover,
+.timetable-job:focus-visible {
+    outline: 2px solid #173f68;
+    outline-offset: 1px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.16);
+}
+
+/* Text wraps when the block is tall enough; a short block clips it. */
+.availability-block strong,
+.availability-block span,
+.timetable-job strong,
+.timetable-job span {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.availability-block strong,
+.timetable-job strong {
+    font-size: 13px;
+}
+
+.timetable-job__address {
+    color: #334155;
+}
+
+/* ---------- form and the week's list ---------- */
+
+.availability-panels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 0 24px;
+    align-items: start;
+}
+
+.availability-form-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr);
+    gap: 12px;
+}
+
+.availability-time-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 18rem));
+    gap: 12px;
+}
+
+/* Short values get short boxes: 18rem fits "28/10/2026" or "05:00 pm" with
+   the picker icon, so the date never stretches across a wide card. */
+#availability-form input[type='date'],
+#availability-form input[type='time'] {
+    width: 100%;
+    max-width: 18rem;
+    margin-bottom: 12px;
+}
+
+#availability-form .checkbox {
+    margin-bottom: 16px;
+}
+
+#availability-form,
+#availability-form button {
+    margin-bottom: 0;
+}
+
+#availability-form input[type='time']:disabled {
+    opacity: 0.5;
+}
+
+.availability-period-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.availability-period-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.availability-period-list li:last-child {
+    border-bottom: 0;
+}
+
+@media (max-width: 680px) {
+    .availability-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .availability-period-list li {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,99 @@
+/* Plumber job page: visit details beside a map of the address. */
+
+.job-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 0 24px;
+    /* Both cards take the height of the taller one. */
+    align-items: stretch;
+}
+
+/* The map grows to fill whatever height the details card sets. */
+.job-map {
+    display: flex;
+    flex-direction: column;
+}
+
+.job-map__frame {
+    position: relative;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 240px;
+    border: 1px solid #d6e1eb;
+    border-radius: 8px;
+    background: #eef2f6;
+}
+
+.job-map__frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* The embed swallows clicks, so this transparent link covers it and opens
+   the address in Google Maps instead. */
+.job-map__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.job-map__hint {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.job-map__overlay:hover .job-map__hint,
+.job-map__overlay:focus-visible .job-map__hint {
+    opacity: 1;
+    transform: none;
+}
+
+.job-map__overlay:focus-visible {
+    outline: 3px solid #173f68;
+    outline-offset: -3px;
+}
+
+.job-map__address {
+    margin: 12px 0;
+    color: #334155;
+    font-weight: 600;
+}
+
+.job-map__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+@media (max-width: 960px) {
+    .job-layout {
+        grid-template-columns: 1fr;
+    }
+
+    /* Stacked, there is no neighbour to match, so give the map a set shape. */
+    .job-map__frame {
+        flex: none;
+        aspect-ratio: 4 / 3;
+    }
+}
+
+@media (hover: none) {
+    /* No hover on touch screens, so keep the hint visible. */
+    .job-map__hint {
+        opacity: 1;
+        transform: none;
+    }
+}
