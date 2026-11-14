@@ -9,6 +9,13 @@ use Cake\ORM\Table;
 
 /**
  * Persistent counters shared by every PHP worker handling form submissions.
+ *
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\FormRateLimit>
+ * @method \App\Model\Entity\FormRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\FormRateLimit>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\FormRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\FormRateLimit> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\FormRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\FormRateLimit>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\FormRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\FormRateLimit> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class FormRateLimitsTable extends Table
 {

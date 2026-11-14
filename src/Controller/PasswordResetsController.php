@@ -12,6 +12,8 @@ use Cake\Http\Response;
  *
  * Two steps: ask for a code, then use it. The code goes to the account's own
  * mailbox on the site's domain. Customers are not covered.
+ *
+ * @property \App\Model\Table\PasswordResetsTable $PasswordResets
  */
 class PasswordResetsController extends AppController
 {

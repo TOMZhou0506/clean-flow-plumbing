@@ -21,6 +21,15 @@ use InvalidArgumentException;
 
 /**
  * Job Requests Model.
+ *
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\JobRequest>
+ * @property \App\Model\Table\CustomersTable&\Cake\ORM\Association\BelongsTo $Customers
+ * @property \App\Model\Table\JobAssignmentsTable&\Cake\ORM\Association\HasOne $JobAssignments
+ * @method \App\Model\Entity\JobRequest[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\JobRequest>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\JobRequest[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\JobRequest> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\JobRequest[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\JobRequest>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\JobRequest[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\JobRequest> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class JobRequestsTable extends Table
 {

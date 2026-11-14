@@ -20,10 +20,11 @@ use Cake\Validation\Validator;
  * @method array<\App\Model\Entity\Property> patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\Property|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
  * @method \App\Model\Entity\Property saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method iterable<\App\Model\Entity\Property>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Property>|false saveMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Property>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Property> saveManyOrFail(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Property>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Property>|false deleteMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Property>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Property> deleteManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Property[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Property>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Property[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Property> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Property[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Property>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Property[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Property> deleteManyOrFail(iterable $entities, array $options = [])
+ * @extends \Cake\ORM\Table<array{}, \App\Model\Entity\Property>
  */
 class PropertiesTable extends Table
 {

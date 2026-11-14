@@ -18,6 +18,10 @@ use Throwable;
  * Writing goes through saveChanges() and restore() only. Both check every value
  * against ContentCatalogue, keep a version of each change, and record it in the
  * audit trail, all inside one transaction.
+ *
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \Cake\ORM\Entity>
+ * @property \App\Model\Table\SiteContentVersionsTable&\Cake\ORM\Association\HasMany $SiteContentVersions
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class SiteContentsTable extends Table
 {

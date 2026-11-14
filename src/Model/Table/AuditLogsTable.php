@@ -15,6 +15,13 @@ use Throwable;
  * My append-only trail of privileged actions. Nothing in the application
  * updates or deletes rows here, and I would not grant the database user the
  * privilege to do either.
+ *
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\AuditLog>
+ * @method \App\Model\Entity\AuditLog[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AuditLog>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\AuditLog[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AuditLog> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\AuditLog[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AuditLog>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\AuditLog[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AuditLog> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AuditLogsTable extends Table
 {

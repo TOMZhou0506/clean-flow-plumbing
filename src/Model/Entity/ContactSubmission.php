@@ -20,6 +20,8 @@ use Cake\ORM\Entity;
  * @property string|null $ip_address
  * @property string|null $user_agent
  * @property \Cake\I18n\DateTime $submitted_at
+ * @property string $job_stage
+ * @property-read mixed $preview
  */
 class ContactSubmission extends Entity
 {
@@ -178,6 +180,8 @@ class ContactSubmission extends Entity
     /**
      * I truncate the message for the list view, so a page of 100 rows does
      * not ship the entire dataset to the browser.
+     *
+     * @see \App\Model\Entity\ContactSubmission::$preview
      */
     protected function _getPreview(): string
     {

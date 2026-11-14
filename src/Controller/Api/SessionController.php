@@ -12,6 +12,8 @@ use Cake\Http\Response;
  *
  * I leave credential checking to the Authentication plugin. This controller
  * only reports whether a session exists and ends it on request.
+ *
+ * @property \App\Model\Table\AuditLogsTable $AuditLogs
  */
 class SessionController extends ApiController
 {

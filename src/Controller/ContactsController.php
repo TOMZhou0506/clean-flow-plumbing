@@ -26,6 +26,8 @@ use Throwable;
  * 2. The action required a login. AppController loads the Authentication
  *    component for every controller, and nothing here opted out, so a
  *    customer hit the admin login screen instead of the form.
+ *
+ * @property \App\Model\Table\ContactsTable $Contacts
  */
 class ContactsController extends AppController
 {

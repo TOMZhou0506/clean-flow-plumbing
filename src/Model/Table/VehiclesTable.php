@@ -10,6 +10,14 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /** Validates and stores the administrator's fleet register. */
+/**
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\Vehicle>
+ * @method \App\Model\Entity\Vehicle[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Vehicle>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Vehicle[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Vehicle> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Vehicle[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Vehicle>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Vehicle[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Vehicle> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class VehiclesTable extends Table
 {
     /** Lock the fleet row during a dispatch or deactivation transaction on MySQL. */

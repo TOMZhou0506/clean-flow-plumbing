@@ -16,6 +16,9 @@ use Cake\Http\Response;
  * Every action here requires authentication. The Authentication middleware in
  * Application.php enforces it, and I add nothing in this controller to
  * allowUnauthenticated().
+ *
+ * @property \App\Model\Table\ContactSubmissionsTable $ContactSubmissions
+ * @property \App\Model\Table\AuditLogsTable $AuditLogs
  */
 class SubmissionsController extends ApiController
 {

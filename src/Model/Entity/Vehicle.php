@@ -6,6 +6,15 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /** A vehicle in the business fleet. */
+/**
+ * @property int $id
+ * @property string $registration_number
+ * @property string $label
+ * @property string|null $notes
+ * @property bool $active
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
+ */
 class Vehicle extends Entity
 {
     /**

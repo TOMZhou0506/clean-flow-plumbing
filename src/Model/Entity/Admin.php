@@ -97,6 +97,7 @@ class Admin extends Entity
      *
      * @param string $password The plaintext password.
      * @return string|null The hash, or null when the input is empty.
+     * @see \App\Model\Entity\Admin::$admin_password
      */
     protected function _setAdminPassword(string $password): ?string
     {

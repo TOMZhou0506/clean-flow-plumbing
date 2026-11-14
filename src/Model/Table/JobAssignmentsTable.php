@@ -9,6 +9,14 @@ use DateTimeImmutable;
 use DateTimeZone;
 
 /** One plumber and one scheduled visit for each approved request. */
+/**
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \Cake\ORM\Entity>
+ * @property \App\Model\Table\JobRequestsTable&\Cake\ORM\Association\BelongsTo $JobRequests
+ * @property \App\Model\Table\AdminsTable&\Cake\ORM\Association\BelongsTo $Plumbers
+ * @property \App\Model\Table\AdminsTable&\Cake\ORM\Association\BelongsTo $AssignedBy
+ * @property \App\Model\Table\VehiclesTable&\Cake\ORM\Association\BelongsTo $Vehicles
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class JobAssignmentsTable extends Table
 {
     /** Set the request and plumber relationships used by scoped views. */

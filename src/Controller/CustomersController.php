@@ -8,6 +8,8 @@ use Cake\Event\EventInterface;
 
 /**
  * Customer account registration.
+ *
+ * @property \App\Model\Table\CustomersTable $Customers
  */
 class CustomersController extends AppController
 {

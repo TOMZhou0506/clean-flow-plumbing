@@ -14,6 +14,9 @@ use DateTimeImmutable;
 use DateTimeZone;
 
 /** Admin-only fleet register; taking a vehicle out of service never deletes it. */
+/**
+ * @property \App\Model\Table\VehiclesTable $Vehicles
+ */
 class VehiclesController extends AppController
 {
     /** Manager and plumber accounts cannot manage the fleet. */

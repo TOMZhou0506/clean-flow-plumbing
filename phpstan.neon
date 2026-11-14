@@ -9,3 +9,8 @@ parameters:
 		- config/bootstrap.php
 	paths:
 		- src/
+	ignoreErrors:
+		# Same as the CakePHP app skeleton: don't require array shapes and
+		# generic parameters on every docblock.
+		- identifier: missingType.iterableValue
+		- identifier: missingType.generics

@@ -10,6 +10,12 @@ use Cake\ORM\Table;
  *
  * @method \App\Model\Entity\PasswordReset newEmptyEntity()
  * @method \App\Model\Entity\PasswordReset saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\PasswordReset>
+ * @method \App\Model\Entity\PasswordReset[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\PasswordReset>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\PasswordReset[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\PasswordReset> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\PasswordReset[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\PasswordReset>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\PasswordReset[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\PasswordReset> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class PasswordResetsTable extends Table
 {

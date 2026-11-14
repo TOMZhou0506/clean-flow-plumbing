@@ -19,6 +19,8 @@ use Cake\Event\EventInterface;
  * able to tidy up their own entries afterwards. Ideally the database user
  * would have INSERT and SELECT on this table and not UPDATE or DELETE, so
  * even a compromised application account could not rewrite history.
+ *
+ * @property \App\Model\Table\AuditLogsTable $AuditLogs
  */
 class AuditLogsController extends AppController
 {

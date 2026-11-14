@@ -14,6 +14,8 @@ use Cake\ORM\Entity;
  * @property string $price
  *
  * @property \App\Model\Entity\User $user
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
  */
 class Property extends Entity
 {

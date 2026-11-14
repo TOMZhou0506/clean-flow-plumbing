@@ -5,9 +5,9 @@ namespace App\Service;
 
 use App\Model\Entity\Admin;
 use App\Validation\StrongPassword;
-use Cake\Datasource\FactoryLocator;
 use Cake\I18n\DateTime;
 use Cake\Log\Log;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * Resetting an office account's password with a code sent to its own mailbox.
@@ -22,6 +22,8 @@ use Cake\Log\Log;
  */
 class PasswordResetService
 {
+    use LocatorAwareTrait;
+
     public const MINUTES = 15;
     public const MAX_ATTEMPTS = 5;
     public const MAX_CODES_PER_WINDOW = 3;
@@ -58,7 +60,7 @@ class PasswordResetService
             return;
         }
 
-        $resets = FactoryLocator::get('Table')->get('PasswordResets');
+        $resets = $this->fetchTable('PasswordResets');
         $recent = $resets->find()
             ->where(['admin_id' => $admin->admin_id, 'created >=' => DateTime::now()->subMinutes(self::MINUTES)])
             ->count();
@@ -96,7 +98,7 @@ class PasswordResetService
     public function reset(string $email, string $code, string $password, string $confirm, string $ip): array
     {
         $admin = $this->findAccount($email);
-        $resets = FactoryLocator::get('Table')->get('PasswordResets');
+        $resets = $this->fetchTable('PasswordResets');
         $open = $admin === null ? null : $resets->find()
             ->where([
                 'admin_id' => $admin->admin_id,
@@ -124,7 +126,7 @@ class PasswordResetService
         }
 
         // The code is right. A weak password must not cost the person their code.
-        $accounts = FactoryLocator::get('Table')->get('Admins');
+        $accounts = $this->fetchTable('Admins');
         $admin = $accounts->patchEntity($admin, [
             'admin_password' => $password,
             'confirm_password' => $confirm,
@@ -137,7 +139,7 @@ class PasswordResetService
         }
 
         $this->cancelOpenCodes((int)$admin->admin_id);
-        FactoryLocator::get('Table')->get('AuditLogs')->record(
+        $this->fetchTable('AuditLogs')->record(
             'admin.password_reset',
             (int)$admin->admin_id,
             'admin',
@@ -163,7 +165,7 @@ class PasswordResetService
         }
 
         /** @var \App\Model\Entity\Admin|null */
-        return FactoryLocator::get('Table')->get('Admins')->find()
+        return $this->fetchTable('Admins')->find()
             ->where(['admin_email' => $email, 'active' => true])
             ->first();
     }
@@ -186,7 +188,7 @@ class PasswordResetService
      */
     private function cancelOpenCodes(int $adminId): void
     {
-        FactoryLocator::get('Table')->get('PasswordResets')->updateAll(
+        $this->fetchTable('PasswordResets')->updateAll(
             ['used' => DateTime::now()],
             ['admin_id' => $adminId, 'used IS' => null],
         );

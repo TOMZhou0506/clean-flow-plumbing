@@ -1,2 +1,541 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^PHPDoc tag @extends has invalid value \(\\Cake\\Http\\BaseApplication\)\: Unexpected token "\\n ", expected ''\<'' at offset 178 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Application.php
+
+		-
+			message: '#^Access to an undefined property Cake\\Datasource\\EntityInterface\:\:\$cust_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Command/SeedDemoJobsCommand.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 4
+			path: src/Controller/AdminsController.php
+
+		-
+			message: '#^Method App\\Controller\\AdminsController\:\:delete\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Controller/AdminsController.php
+
+		-
+			message: '#^Method App\\Controller\\AdminsController\:\:setActive\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/AdminsController.php
+
+		-
+			message: '#^Dead catch \- Cake\\Datasource\\Exception\\RecordNotFoundException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: src/Controller/Api/SubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$object of method Cake\\Controller\\Controller\:\:paginate\(\) expects Cake\\Datasource\\QueryInterface\|Cake\\Datasource\\RepositoryInterface\|string\|null, Cake\\Database\\Query\\SelectQuery given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Api/SubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fclose expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Api/SubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fputcsv expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/Api/SubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fwrite expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Api/SubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function rewind expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Api/SubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function stream_get_contents expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Api/SubmissionsController.php
+
+		-
+			message: '#^Dead catch \- Cake\\Datasource\\Exception\\RecordNotFoundException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: src/Controller/ComplianceController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Controller/ComplianceController.php
+
+		-
+			message: '#^Dead catch \- Cake\\Datasource\\Exception\\RecordNotFoundException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: src/Controller/ContactSubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$object of method Cake\\Controller\\Controller\:\:paginate\(\) expects Cake\\Datasource\\QueryInterface\|Cake\\Datasource\\RepositoryInterface\|string\|null, Cake\\Database\\Query\\SelectQuery given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/ContactSubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fclose expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/ContactSubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fputcsv expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/ContactSubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fwrite expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/ContactSubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function rewind expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/ContactSubmissionsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function stream_get_contents expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/ContactSubmissionsController.php
+
+		-
+			message: '#^Method App\\Controller\\CustomersController\:\:logout\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/CustomersController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\Datasource\\EntityInterface\:\:\$job_request\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\Datasource\\EntityInterface\:\:\$scheduled_end\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\Datasource\\EntityInterface\:\:\$scheduled_start\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$job_request\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Cannot call method format\(\) on DateTimeImmutable\|null\.$#'
+			identifier: method.nonObject
+			count: 6
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Cannot call method setTimezone\(\) on DateTimeImmutable\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 7
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Method App\\Controller\\JobRequestsController\:\:dispatchOptions\(\) should return array\{plumbers\: array\<int, string\>, vehicleOptions\: array\<int, string\>\} but returns array\{plumbers\: array\<int\|string, string\>, vehicleOptions\: array\<int, non\-falsy\-string\>\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Method App\\Controller\\JobRequestsController\:\:rate\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Method App\\Controller\\JobRequestsController\:\:unassign\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 4
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^PHPDoc tag @return with type Cake\\Http\\Response\|void\|null is not subtype of native type Cake\\Http\\Response\|null\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Parameter \#1 \$object of method Cake\\Controller\\Controller\:\:paginate\(\) expects Cake\\Datasource\\QueryInterface\|Cake\\Datasource\\RepositoryInterface\|string\|null, Cake\\Database\\Query\\SelectQuery given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fclose expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fputcsv expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fwrite expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function rewind expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function stream_get_contents expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Parameter \#2 \$conflict of method App\\Controller\\JobRequestsController\:\:conflictMessage\(\) expects Cake\\Datasource\\EntityInterface, object given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/JobRequestsController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Controller/PasswordResetsController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$plumber_admin_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/PlumberAvailabilityController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_end\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/PlumberAvailabilityController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_start\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/PlumberAvailabilityController.php
+
+		-
+			message: '#^Method App\\Controller\\PlumberAvailabilityController\:\:dismiss\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/PlumberAvailabilityController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_end\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_start\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$job_request\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Call to an undefined method object\:\:set\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 5
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Method App\\Controller\\PlumbersController\:\:cancelUnavailable\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Method App\\Controller\\PlumbersController\:\:finishJob\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Method App\\Controller\\PlumbersController\:\:setActive\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Method App\\Controller\\PlumbersController\:\:startJob\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Parameter \#1 \$adminId of method App\\Model\\Table\\PlumberUnavailabilitiesTable\:\:overlaps\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Parameter \#1 \$entity of method Cake\\ORM\\Table\<array\<string, Cake\\ORM\\Behavior\\TimestampBehavior\>,Cake\\ORM\\Entity\>\:\:saveOrFail\(\) expects Cake\\Datasource\\EntityInterface, object given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Unable to resolve the template type TSavedEntity in call to method Cake\\ORM\\Table\<array\<string, Cake\\ORM\\Behavior\\TimestampBehavior\>,App\\Model\\Entity\\JobRequest\>\:\:saveOrFail\(\)$#'
+			identifier: argument.templateType
+			count: 2
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Unable to resolve the template type TSavedEntity in call to method Cake\\ORM\\Table\<array\<string, Cake\\ORM\\Behavior\\TimestampBehavior\>,Cake\\ORM\\Entity\>\:\:saveOrFail\(\)$#'
+			identifier: argument.templateType
+			count: 2
+			path: src/Controller/PlumbersController.php
+
+		-
+			message: '#^Method App\\Controller\\SiteContentsController\:\:editorNames\(\) should return array\<int, string\> but returns array\<int\|string, string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/SiteContentsController.php
+
+		-
+			message: '#^Method App\\Controller\\SiteContentsController\:\:restore\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/SiteContentsController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_end\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_start\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$vehicle_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$plumber\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Cannot call method setTimezone\(\) on DateTimeImmutable\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Method App\\Controller\\VehiclesController\:\:setActive\(\) should return Cake\\Http\\Response but returns Cake\\Http\\Response\|null\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Parameter \#1 \$vehicleIds of method App\\Model\\Table\\JobAssignmentsTable\:\:vehicleSchedule\(\) expects list\<int\>, array\<int, int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Parameter \#2 \$ids of method App\\Model\\Table\\JobAssignmentsTable\:\:nearestBookedDay\(\) expects list\<int\>, array\<int, int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/VehiclesController.php
+
+		-
+			message: '#^Array access to entity App\\Model\\Entity\\ComplianceCheck is not allowed, access as object instead$#'
+			identifier: cake.entity.arrayAccess
+			count: 2
+			path: src/Model/Table/ComplianceChecksTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$job_request\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$plumber_admin_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_end\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$scheduled_start\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$vehicle_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Method App\\Model\\Table\\JobAssignmentsTable\:\:scheduleSnapshot\(\) should return array\<int, array\{current\: Cake\\Datasource\\EntityInterface\|null, next\: Cake\\Datasource\\EntityInterface\|null, open\: int\}\> but returns non\-empty\-array\<int, array\{current\?\: Cake\\ORM\\Entity\|null, next\?\: Cake\\ORM\\Entity\|null, open\: int\<0, max\>\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Method App\\Model\\Table\\JobAssignmentsTable\:\:vehicleHistory\(\) should return list\<Cake\\Datasource\\EntityInterface\> but returns array\<int, Cake\\ORM\\Entity\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Method App\\Model\\Table\\JobAssignmentsTable\:\:vehicleSchedule\(\) should return array\<int, array\{current\: Cake\\Datasource\\EntityInterface\|null, upcoming\: list\<Cake\\Datasource\\EntityInterface\>\}\> but returns non\-empty\-array\<int, array\{current\?\: Cake\\ORM\\Entity\|null, upcoming\: list\<Cake\\ORM\\Entity\>\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Offset ''current'' might not exist on array\{current\?\: Cake\\ORM\\Entity\|null, next\?\: Cake\\ORM\\Entity\|null, open\: int\<1, max\>\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Offset ''current'' might not exist on array\{current\?\: Cake\\ORM\\Entity\|null, upcoming\: list\<Cake\\ORM\\Entity\>\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Offset ''next'' might not exist on array\{current\?\: Cake\\ORM\\Entity\|null, next\?\: Cake\\ORM\\Entity\|null, open\: int\<1, max\>\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Model/Table/JobAssignmentsTable.php
+
+		-
+			message: '#^Method App\\Model\\Table\\SiteContentVersionsTable\:\:history\(\) should return list\<Cake\\Datasource\\EntityInterface\> but returns array\<int, Cake\\ORM\\Entity\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Model/Table/SiteContentVersionsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$content_key\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Model/Table/SiteContentsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$modified\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Model/Table/SiteContentsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$modified_by\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Model/Table/SiteContentsTable.php
+
+		-
+			message: '#^Access to an undefined property Cake\\ORM\\Entity\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Model/Table/SiteContentsTable.php
+
+		-
+			message: '#^Cannot access property \$value on array\|Cake\\Datasource\\EntityInterface\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Model/Table/SiteContentsTable.php
+
+		-
+			message: '#^Parameter \#1 \$entries of method App\\Service\\Assistant\\Assistant\:\:fromKnowledge\(\) expects list\<array\<string, mixed\>\>, non\-empty\-array\<int, array\<string, mixed\>\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Service/Assistant/Assistant.php
+
+		-
+			message: '#^Comparison operation "\<\=" between 1\|2 and 2 is always true\.$#'
+			identifier: smallerOrEqual.alwaysTrue
+			count: 1
+			path: src/Service/Assistant/GeminiClient.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Service/Assistant/GeminiClient.php

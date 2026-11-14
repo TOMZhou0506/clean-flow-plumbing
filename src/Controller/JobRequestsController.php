@@ -31,6 +31,8 @@ use Throwable;
  * ones. Anything added to this controller later requires the admin role until
  * someone deliberately says otherwise, so the mistake of forgetting a guard
  * fails closed rather than exposing every customer's address to whoever asks.
+ *
+ * @property \App\Model\Table\JobRequestsTable $JobRequests
  */
 class JobRequestsController extends AppController
 {

@@ -7,6 +7,13 @@ use Cake\ORM\Entity;
 
 /**
  * A short-lived login attempt counter.
+ *
+ * @property string $rate_key
+ * @property string $scope
+ * @property int $attempts
+ * @property \Cake\I18n\DateTime $expires_at
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  */
 class LoginRateLimit extends Entity
 {

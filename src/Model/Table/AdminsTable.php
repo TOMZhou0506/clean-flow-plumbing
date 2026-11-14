@@ -28,10 +28,11 @@ use InvalidArgumentException;
  * @method array<\App\Model\Entity\Admin> patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\Admin|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
  * @method \App\Model\Entity\Admin saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method iterable<\App\Model\Entity\Admin>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Admin>|false saveMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Admin>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Admin> saveManyOrFail(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Admin>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Admin>|false deleteMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Admin>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Admin> deleteManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Admin[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Admin>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Admin[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Admin> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Admin[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Admin>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Admin[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Admin> deleteManyOrFail(iterable $entities, array $options = [])
+ * @extends \Cake\ORM\Table<array{}, \App\Model\Entity\Admin>
  */
 class AdminsTable extends Table
 {

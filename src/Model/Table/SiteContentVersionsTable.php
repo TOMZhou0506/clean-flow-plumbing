@@ -8,6 +8,9 @@ use Cake\ORM\Table;
 /**
  * Every value ever saved for a piece of public text, so any of them can be
  * put back. Rows are only inserted, never changed or removed.
+ *
+ * @extends \Cake\ORM\Table<array{}, \Cake\ORM\Entity>
+ * @property \App\Model\Table\AdminsTable&\Cake\ORM\Association\BelongsTo $Editors
  */
 class SiteContentVersionsTable extends Table
 {

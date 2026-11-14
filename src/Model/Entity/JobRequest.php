@@ -7,6 +7,27 @@ use Cake\ORM\Entity;
 
 /**
  * A customer's request for plumbing work.
+ *
+ * @property int $id
+ * @property int $customer_id
+ * @property string $street_address
+ * @property string $suburb
+ * @property string $state
+ * @property string $postcode
+ * @property string $job_description
+ * @property \Cake\I18n\DateTime $preferred_datetime
+ * @property string $contact_phone
+ * @property string|null $access_instructions
+ * @property string $status
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
+ * @property \Cake\I18n\DateTime|null $read_at
+ * @property int|null $read_by
+ * @property int|null $customer_rating
+ * @property \Cake\I18n\DateTime|null $rated_at
+ * @property \App\Model\Entity\Customer $customer
+ * @property \Cake\ORM\Entity|null $job_assignment
+ * @property-read string $preview
  */
 class JobRequest extends Entity
 {
@@ -319,6 +340,7 @@ class JobRequest extends Entity
      * should not ship every full description to the browser.
      *
      * @return string
+     * @see \App\Model\Entity\JobRequest::$preview
      */
     protected function _getPreview(): string
     {

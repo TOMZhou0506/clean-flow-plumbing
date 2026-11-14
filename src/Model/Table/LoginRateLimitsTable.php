@@ -9,6 +9,13 @@ use Cake\ORM\Table;
 
 /**
  * Persistent counters shared by all PHP workers and all three login routes.
+ *
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\LoginRateLimit>
+ * @method \App\Model\Entity\LoginRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\LoginRateLimit>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\LoginRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\LoginRateLimit> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\LoginRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\LoginRateLimit>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\LoginRateLimit[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\LoginRateLimit> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class LoginRateLimitsTable extends Table
 {

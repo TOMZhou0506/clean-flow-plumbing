@@ -12,6 +12,13 @@ use Cake\Validation\Validator;
 
 /**
  * Customers Model.
+ *
+ * @extends \Cake\ORM\Table<array{}, \App\Model\Entity\Customer>
+ * @property \App\Model\Table\JobRequestsTable&\Cake\ORM\Association\HasMany $JobRequests
+ * @method \App\Model\Entity\Customer[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Customer>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Customer[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Customer> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Customer[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Customer>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Customer[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\Customer> deleteManyOrFail(iterable $entities, array $options = [])
  */
 class CustomersTable extends Table
 {

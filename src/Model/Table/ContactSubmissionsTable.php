@@ -34,6 +34,12 @@ use InvalidArgumentException;
  * @method \App\Model\Entity\ContactSubmission get(mixed $primaryKey, array $options = [])
  * @method \App\Model\Entity\ContactSubmission patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\ContactSubmission|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\ContactSubmission>
+ * @method \App\Model\Entity\ContactSubmission[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ContactSubmission>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\ContactSubmission[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ContactSubmission> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\ContactSubmission[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ContactSubmission>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\ContactSubmission[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ContactSubmission> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ContactSubmissionsTable extends Table
 {

@@ -15,6 +15,8 @@ use Cake\Http\Response;
  * Only the agreed items in ContentCatalogue can be edited, only by the roles
  * in Cms.editorRoles, and every change is versioned and audited by
  * SiteContentsTable. Saved text is live on the next page load.
+ *
+ * @property \App\Model\Table\SiteContentsTable $SiteContents
  */
 class SiteContentsController extends AppController
 {

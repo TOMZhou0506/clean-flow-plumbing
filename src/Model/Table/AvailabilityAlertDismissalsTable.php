@@ -9,6 +9,12 @@ use Cake\ORM\TableRegistry;
 use DateTimeImmutable;
 
 /** Per-admin read state for immutable availability events in the audit trail. */
+/**
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \Cake\ORM\Entity>
+ * @property \App\Model\Table\AdminsTable&\Cake\ORM\Association\BelongsTo $Admins
+ * @property \App\Model\Table\AuditLogsTable&\Cake\ORM\Association\BelongsTo $AuditLogs
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class AvailabilityAlertDismissalsTable extends Table
 {
     /** Configure the acknowledgement table. */

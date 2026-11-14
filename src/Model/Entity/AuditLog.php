@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * AuditLog Entity
  *
  * @property int $id
- * @property string|null $user_id
+ * @property int|null $user_id
  * @property string $action
  * @property string|null $entity_type
  * @property string|null $entity_id

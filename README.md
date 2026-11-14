@@ -1,5 +1,7 @@
 # Clean Flow Plumbing — Job Management Web App
 
+![CI](https://github.com/TOMZhou0506/clean-flow-plumbing/actions/workflows/ci.yml/badge.svg)
+
 A full-stack web application for a small plumbing business: customers book jobs online, office staff review and assign them, plumbers manage their schedule, and a manager oversees the team.
 
 Built by a team of six as the industry-experience project for **FIT3047 (Monash University, 2026)**. This repository is my personal portfolio copy of the final codebase.

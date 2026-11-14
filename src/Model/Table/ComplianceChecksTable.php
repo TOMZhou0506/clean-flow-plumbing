@@ -29,6 +29,12 @@ use InvalidArgumentException;
  * @method \App\Model\Entity\ComplianceCheck newEmptyEntity()
  * @method \App\Model\Entity\ComplianceCheck get(mixed $primaryKey, array $options = [])
  * @method \App\Model\Entity\ComplianceCheck|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @extends \Cake\ORM\Table<array{}, \App\Model\Entity\ComplianceCheck>
+ * @property \App\Model\Table\ContactSubmissionsTable&\Cake\ORM\Association\BelongsTo $ContactSubmissions
+ * @method \App\Model\Entity\ComplianceCheck[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ComplianceCheck>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\ComplianceCheck[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ComplianceCheck> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\ComplianceCheck[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ComplianceCheck>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\ComplianceCheck[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\ComplianceCheck> deleteManyOrFail(iterable $entities, array $options = [])
  */
 class ComplianceChecksTable extends Table
 {

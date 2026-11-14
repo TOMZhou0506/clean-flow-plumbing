@@ -17,6 +17,8 @@ use Cake\ORM\Entity;
  * @property string|null $notes
  * @property int|null $checked_by
  * @property \Cake\I18n\DateTime $checked_at
+ * @property string $subject_type
+ * @property \App\Model\Entity\ContactSubmission $contact_submission
  */
 class ComplianceCheck extends Entity
 {

@@ -14,8 +14,8 @@ use Cake\ORM\Entity;
  * @property string $password
  * @property string $first_name
  * @property string $last_name
- * @property \Cake\I18n\DateTime $created
- * @property \Cake\I18n\DateTime $modified
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
  *
  * @property \App\Model\Entity\Property[] $properties
  */
@@ -63,6 +63,7 @@ class User extends Entity
      *
      * @param string $password The plaintext password.
      * @return string|null The hash, or null when the input is empty.
+     * @see \App\Model\Entity\User::$password
      */
     protected function _setPassword(string $password): ?string
     {

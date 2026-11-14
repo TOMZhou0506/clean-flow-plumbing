@@ -14,6 +14,12 @@ use Cake\Validation\Validator;
  *
  * @method \App\Model\Entity\AssistantUnansweredQuestion newEmptyEntity()
  * @method \App\Model\Entity\AssistantUnansweredQuestion get(mixed $primaryKey, array $options = [])
+ * @extends \Cake\ORM\Table<array{Timestamp: \Cake\ORM\Behavior\TimestampBehavior}, \App\Model\Entity\AssistantUnansweredQuestion>
+ * @method \App\Model\Entity\AssistantUnansweredQuestion[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AssistantUnansweredQuestion>|false saveMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\AssistantUnansweredQuestion[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AssistantUnansweredQuestion> saveManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\AssistantUnansweredQuestion[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AssistantUnansweredQuestion>|false deleteMany(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\AssistantUnansweredQuestion[]|\Cake\Datasource\ResultSetInterface<int, \App\Model\Entity\AssistantUnansweredQuestion> deleteManyOrFail(iterable $entities, array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AssistantUnansweredQuestionsTable extends Table
 {
