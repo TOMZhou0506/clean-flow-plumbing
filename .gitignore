@@ -63,20 +63,3 @@ yarn-error.log
 *.sql.zip
 /config/Migrations/dump*.sql
 clean_flow_plumbing_db.sql
-# and not the team's to maintain, so I keep them on my machine.
-#
-# I list them by name rather than ignoring /docs/ outright, so the team can
-# still add shared documentation here later. Delete a line to start tracking
-# that file again. Without these entries a plain `git add -A` puts them back.
-/docs/HANDOFF.md
-/docs/miro-reflection-*.txt
-/docs/Iteration1-Report-*.docx
-/docs/API.md
-/docs/SECURITY.md
-/docs/ACCEPTANCE-CRITERIA.md
-/docs/ADMIN-DASHBOARD-SETUP.md
-/docs/seed-submissions.sql
-/docs/Iteration1_RunSheet.md
-/docs/Iteration1_RunSheet.docx
-/docs/*
-

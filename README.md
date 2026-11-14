@@ -4,7 +4,17 @@ A full-stack web application for a small plumbing business: customers book jobs 
 
 Built by a team of six as the industry-experience project for **FIT3047 (Monash University, 2026)**. This repository is my personal portfolio copy of the final codebase.
 
-> Screenshots / demo GIF: _add images to `docs/screenshots/` and link them here._
+![Clean Flow Plumbing home page](docs/screenshots/home.jpg)
+
+## Screenshots
+
+| Job requests (admin) | Plumber availability |
+|---|---|
+| ![Job requests](docs/screenshots/job-requests.png) | ![Plumber availability](docs/screenshots/plumber-availability.png) |
+
+| Vehicles | Vehicle availability |
+|---|---|
+| ![Vehicles](docs/screenshots/vehicles.png) | ![Vehicle availability](docs/screenshots/vehicle-availability.png) |
 
 ## Tech stack
 
