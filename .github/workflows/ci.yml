@@ -19,12 +19,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: '8.2'
-            dependencies: 'lowest'
           - php-version: '8.5'
-            dependencies: 'highest'
-          - php-version: '8.5'
-            dependencies: 'highest'
+            dependencies: 'locked'
 
     steps:
     - uses: actions/checkout@v7
@@ -61,7 +57,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.5'
         extensions: mbstring, intl
         coverage: none
         tools: cs2pr, phpstan:2.1
