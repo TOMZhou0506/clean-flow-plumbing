@@ -323,7 +323,7 @@ class Assistant
         Log::debug('Assistant answered from knowledge: chose {chosen} from [{candidates}].', [
             'chosen' => (string)($best['id'] ?? 'unknown'),
             'candidates' => implode(', ', array_map(
-                static fn (array $entry): string => (string)($entry['id'] ?? 'unknown'),
+                static fn(array $entry): string => (string)($entry['id'] ?? 'unknown'),
                 $entries,
             )),
         ]);

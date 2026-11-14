@@ -60,7 +60,7 @@ jobs:
         php-version: '8.5'
         extensions: mbstring, intl
         coverage: none
-        tools: cs2pr, phpstan:2.1
+        tools: cs2pr
 
     - name: Composer install
       uses: ramsey/composer-install@v4
@@ -70,6 +70,6 @@ jobs:
 
     - name: Run phpstan
       if: always()
-      run: phpstan
+      run: vendor/bin/phpstan analyse --no-progress
       env:
         SECURITY_SALT: f76f1c8475585c46c6acd3ddcb8f5e0f15de524637bb4080a08c4afe7cfc9144
